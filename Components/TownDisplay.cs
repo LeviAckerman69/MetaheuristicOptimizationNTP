@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using MetaheuristicOptimizationNTP.Structures;
@@ -7,9 +8,16 @@ namespace MetaheuristicOptimizationNTP.Components;
 
 public class TownDisplay : FrameworkElement, ITownsListener
 {
+    private static Solution solution = new Solution(Storage.Towns);
     public void OnTownsChanged()
     {
+        solution = new Solution(Storage.Towns);
         InvalidateVisual();
+    }
+
+    public void MutateSolution()
+    {
+        solution.SwapMutation();
     }
 
     protected override void OnRender(DrawingContext drawingContext)
@@ -20,8 +28,25 @@ public class TownDisplay : FrameworkElement, ITownsListener
         {
             town.Draw(drawingContext);
         }
-    }
 
+        var towns = Storage.Towns.Get();
+
+       
+        var permutation = solution.Permutation;
+
+        for (var i = 0; i < permutation.Count; i++)
+        {   
+            var townID1 = permutation[i];
+            var town1 = towns[townID1];
+            var point1 = new Point(town1.X, town1.Y);
+
+            var townID2 = permutation[(i + 1) % permutation.Count];
+            var town2 = towns[townID2];
+            var point2 = new Point(town2.X, town2.Y);
+
+            drawingContext.DrawLine(new Pen(Brushes.Black, 2), point1, point2);
+        }
+    }
 
     protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
     {

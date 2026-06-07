@@ -7,9 +7,10 @@
     x:Class="MetaheuristicOptimizationNTP.MainWindow"
     mc:Ignorable="d"
     Title="MainWindow" Height="550" Width="900">
-    <Grid Background="Transparent">
+    <Grid x:Name="MainGrid" Background="Transparent">
         <Border Margin="48,38,276,124" BorderBrush="Black" BorderThickness="2">
             <Components:TownDisplay x:Name="TownDisplay" />
         </Border>
+        <Button x:Name="ButtonMutate" Content="Mutate" HorizontalAlignment="Left" Height="19" Margin="780,138,0,0" VerticalAlignment="Top" Width="43" />
     </Grid>
 </Window>

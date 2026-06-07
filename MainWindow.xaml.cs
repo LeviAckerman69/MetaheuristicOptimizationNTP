@@ -11,5 +11,13 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         Storage.Towns.Register(TownDisplay);
+
+        ButtonMutate.Click += ButtonMutate_Click;
+    }
+
+    private void ButtonMutate_Click(object sender, RoutedEventArgs e)
+    {
+        TownDisplay.MutateSolution();
+        TownDisplay.InvalidateVisual();
     }
 }
