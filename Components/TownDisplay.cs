@@ -20,6 +20,11 @@ public class TownDisplay : FrameworkElement, ITownsListener
         solution.SwapMutation();
     }
 
+    public void InverseSolution()
+    {
+        solution.InversionMutation();
+    }
+
     protected override void OnRender(DrawingContext drawingContext)
     {
         base.OnRender(drawingContext);

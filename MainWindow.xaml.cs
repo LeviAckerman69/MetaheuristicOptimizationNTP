@@ -13,11 +13,18 @@ public partial class MainWindow : Window
         Storage.Towns.Register(TownDisplay);
 
         ButtonMutate.Click += ButtonMutate_Click;
+        ButtonInverse.Click += ButtonInverse_Click;
     }
 
     private void ButtonMutate_Click(object sender, RoutedEventArgs e)
     {
         TownDisplay.MutateSolution();
+        TownDisplay.InvalidateVisual();
+    }
+
+    private void ButtonInverse_Click(object sender, RoutedEventArgs e)
+    {
+        TownDisplay.InverseSolution();
         TownDisplay.InvalidateVisual();
     }
 }

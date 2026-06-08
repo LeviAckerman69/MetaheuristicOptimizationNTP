@@ -18,7 +18,6 @@ public class TownsList
         NotifyListeners();
     }
 
-    //daj gpt-u da kaze kako napraviti kompletno immutable listu ukljucujuci i same gradove u listi
     public IReadOnlyList<Town> Get()
     {
         return Towns;
