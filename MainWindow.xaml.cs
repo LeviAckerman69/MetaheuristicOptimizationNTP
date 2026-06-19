@@ -14,6 +14,7 @@ public partial class MainWindow : Window
 
         ButtonMutate.Click += ButtonMutate_Click;
         ButtonInverse.Click += ButtonInverse_Click;
+        ButtonScramble.Click += ButtonScramble_Click;
     }
 
     private void ButtonMutate_Click(object sender, RoutedEventArgs e)
@@ -25,6 +26,12 @@ public partial class MainWindow : Window
     private void ButtonInverse_Click(object sender, RoutedEventArgs e)
     {
         TownDisplay.InverseSolution();
+        TownDisplay.InvalidateVisual();
+    }
+
+    private void ButtonScramble_Click(object sender, RoutedEventArgs e)
+    {
+        TownDisplay.ScrambleSolution();
         TownDisplay.InvalidateVisual();
     }
 }

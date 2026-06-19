@@ -17,12 +17,17 @@ public class TownDisplay : FrameworkElement, ITownsListener
 
     public void MutateSolution()
     {
-        solution.SwapMutation();
+        solution = solution.SwapMutation();
     }
 
     public void InverseSolution()
     {
-        solution.InversionMutation();
+        solution = solution.InversionMutation();
+    }
+
+    public void ScrambleSolution()
+    {
+        solution = solution.ScrambleMutation();
     }
 
     protected override void OnRender(DrawingContext drawingContext)

@@ -9,12 +9,12 @@
     Title="MainWindow" Height="550" Width="900">
     <Grid x:Name="MainGrid" Background="Transparent">
         <Border Margin="48,38,178,36" BorderBrush="Black" BorderThickness="2">
-            <Components:TownDisplay x:Name="TownDisplay" Margin="0,0,-44,-26" />
+            <Components:TownDisplay x:Name="TownDisplay" Margin="23,26,24,34" />
         </Border>
 
         <Button
             x:Name="ButtonMutate"
-            Content="Mutate"
+            Content="Swap"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Margin="0,127,40,0"
@@ -28,6 +28,16 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Margin="0,192,40,0"
+            Width="80"
+            Height="50"
+            FontSize="16"/>
+
+        <Button
+            x:Name="ButtonScramble"
+            Content="Scramble"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Margin="0,267,40,0"
             Width="80"
             Height="50"
             FontSize="16"/>

@@ -10,7 +10,7 @@ namespace MetaheuristicOptimizationNTP.Structures
 
         private static readonly Random Random = new Random();
 
-        public List<int> Permutation { get; } = [];
+        public List<int> Permutation { get; }
 
         public Solution(TownsList townsList, bool shuffle = false)
         {
@@ -22,13 +22,21 @@ namespace MetaheuristicOptimizationNTP.Structures
             }
         }
 
-        public void SwapMutation()
+        private Solution(List<int> currentPermutation)
+        { 
+            Permutation = new List<int>(currentPermutation);
+        }
+
+
+        public Solution SwapMutation()
         {
+            var mutatedSolution = new Solution(Permutation);
+
             var n = Permutation.Count;
 
             if (n < 2)
             {
-                return;
+                return this;
             }
 
             var i = Random.Next(n);
@@ -39,20 +47,22 @@ namespace MetaheuristicOptimizationNTP.Structures
                 j = Random.Next(n);
             }
 
-            var temp = Permutation[i];
+            mutatedSolution.Permutation[i] = Permutation[j];
+            mutatedSolution.Permutation[j] = Permutation[i];
 
-            Permutation[i] = Permutation[j];
-            Permutation[j] = temp;
+            return mutatedSolution;
         }
 
 
-        public void InversionMutation(double percentageMutated = 0.2)
+        public Solution InversionMutation(double percentageMutated = 0.2)
         {
+            var mutatedSolution = new Solution(Permutation);
+
             var townCount = Permutation.Count;
 
             if (townCount < 2)
             {
-                return;
+                return this;
             }
 
             var mutationLength = (int)Math.Ceiling(percentageMutated * townCount);
@@ -63,32 +73,69 @@ namespace MetaheuristicOptimizationNTP.Structures
             }
 
             var i = Random.Next(townCount);
-            var j = (i + mutationLength - 1) % townCount;
 
-            if (j < i)
+
+            for (var j = 0; j < mutationLength; j++)
             {
-                j += townCount;
+                mutatedSolution.Permutation[(i + j) % townCount] = Permutation[(i + mutationLength - 1 - j) % townCount];
             }
 
-
-            while (j > i)
-            {
-                var temp = Permutation[i % townCount];
-                Permutation[i % townCount] = Permutation[j % townCount];
-                Permutation[j % townCount] = temp;
-
-
-                i++;
-                j--;
-
-            }
-
-            if (Permutation.Distinct().Count() != townCount)
+            if (mutatedSolution.Permutation.Distinct().Count() != townCount)
             {
                 throw new Exception("Permutation corrupted!");
             }
 
+            else
+            {
+                return mutatedSolution;
+            }
+
         }
+
+        public Solution ScrambleMutation(double percentageMutated = 0.2)
+        {
+            var mutatedSolution = new Solution(Permutation);
+
+            var townCount = Permutation.Count;
+
+            if (townCount < 2)
+            {
+                return this;
+            }
+
+            var mutationLength = (int)Math.Ceiling(percentageMutated * townCount);
+
+            if (mutationLength < 3)
+            {
+                mutationLength = 3;
+            }
+
+            var i = Random.Next(townCount);
+
+            var segment = new List<int>();
+
+            for (var j = 0; j < mutationLength; j++)
+            {
+                segment.Add(mutatedSolution.Permutation[(i + j) % townCount]);
+                
+            }
+
+            segment = segment.Shuffle().ToList();
+
+            for (var j = 0; j < mutationLength; j++)
+            {
+                mutatedSolution.Permutation[(i + j) % townCount] = segment[j];
+            }
+
+            if (mutatedSolution.Permutation.Distinct().Count() != townCount)
+            {
+                throw new Exception("Permutation corrupted!");
+            }
+
+            return mutatedSolution;
+        }
+
+
 
     }
 }
