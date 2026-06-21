@@ -7,7 +7,6 @@ namespace MetaheuristicOptimizationNTP.Structures
 {
     public class Solution
     {
-
         private static readonly Random Random = new Random();
 
         public List<int> Permutation { get; }
@@ -23,32 +22,69 @@ namespace MetaheuristicOptimizationNTP.Structures
         }
 
         private Solution(List<int> currentPermutation)
-        { 
+        {
             Permutation = new List<int>(currentPermutation);
         }
 
 
         public Solution SwapMutation()
         {
-            var mutatedSolution = new Solution(Permutation);
+            var townCount = Permutation.Count;
 
-            var n = Permutation.Count;
-
-            if (n < 2)
+            if (townCount < 2)
             {
-                return this;
+                return new Solution(Permutation);
             }
 
-            var i = Random.Next(n);
-            var j = Random.Next(n);
+            var mutatedSolution = new Solution(Permutation);
+
+            var i = Random.Next(townCount);
+            var j = Random.Next(townCount);
 
             while (i == j)
             {
-                j = Random.Next(n);
+                j = Random.Next(townCount);
             }
 
             mutatedSolution.Permutation[i] = Permutation[j];
             mutatedSolution.Permutation[j] = Permutation[i];
+
+            if (mutatedSolution.Permutation.Distinct().Count() != townCount)
+            {
+                throw new Exception("Permutation corrupted!");
+            }
+
+            return mutatedSolution;
+        }
+
+        public Solution InsertMutation()
+        {
+            var townCount = Permutation.Count;
+
+            if (townCount < 2)
+            {
+                return new Solution(Permutation);
+            }
+
+            var mutatedSolution = new Solution(Permutation);
+
+            var currentPosition = Random.Next(townCount);
+
+            var newPosition = Random.Next(townCount);
+
+            while (newPosition == currentPosition)
+            {
+                newPosition = Random.Next(townCount);
+            }
+
+            var temp = mutatedSolution.Permutation[currentPosition];
+            mutatedSolution.Permutation.RemoveAt(currentPosition);
+            mutatedSolution.Permutation.Insert(newPosition, temp);
+
+            if (mutatedSolution.Permutation.Distinct().Count() != townCount)
+            {
+                throw new Exception("Permutation corrupted!");
+            }
 
             return mutatedSolution;
         }
@@ -56,14 +92,14 @@ namespace MetaheuristicOptimizationNTP.Structures
 
         public Solution InversionMutation(double percentageMutated = 0.2)
         {
-            var mutatedSolution = new Solution(Permutation);
-
             var townCount = Permutation.Count;
 
             if (townCount < 2)
             {
-                return this;
+                return new Solution(Permutation);
             }
+
+            var mutatedSolution = new Solution(Permutation);
 
             var mutationLength = (int)Math.Ceiling(percentageMutated * townCount);
 
@@ -76,32 +112,27 @@ namespace MetaheuristicOptimizationNTP.Structures
 
 
             for (var j = 0; j < mutationLength; j++)
-            {
-                mutatedSolution.Permutation[(i + j) % townCount] = Permutation[(i + mutationLength - 1 - j) % townCount];
-            }
+                mutatedSolution.Permutation[(i + j) % townCount] =
+                    Permutation[(i + mutationLength - 1 - j) % townCount];
 
             if (mutatedSolution.Permutation.Distinct().Count() != townCount)
             {
                 throw new Exception("Permutation corrupted!");
             }
 
-            else
-            {
-                return mutatedSolution;
-            }
-
+            return mutatedSolution;
         }
 
         public Solution ScrambleMutation(double percentageMutated = 0.2)
         {
-            var mutatedSolution = new Solution(Permutation);
-
             var townCount = Permutation.Count;
 
             if (townCount < 2)
             {
-                return this;
+                return new Solution(Permutation);
             }
+
+            var mutatedSolution = new Solution(Permutation);
 
             var mutationLength = (int)Math.Ceiling(percentageMutated * townCount);
 
@@ -117,7 +148,6 @@ namespace MetaheuristicOptimizationNTP.Structures
             for (var j = 0; j < mutationLength; j++)
             {
                 segment.Add(mutatedSolution.Permutation[(i + j) % townCount]);
-                
             }
 
             segment = segment.Shuffle().ToList();
@@ -134,8 +164,5 @@ namespace MetaheuristicOptimizationNTP.Structures
 
             return mutatedSolution;
         }
-
-
-
     }
 }

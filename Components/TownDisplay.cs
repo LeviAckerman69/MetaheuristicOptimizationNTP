@@ -15,9 +15,14 @@ public class TownDisplay : FrameworkElement, ITownsListener
         InvalidateVisual();
     }
 
-    public void MutateSolution()
+    public void SwapSolution()
     {
         solution = solution.SwapMutation();
+    }
+
+    public void InsertSolution()
+    {
+        solution = solution.InsertMutation();
     }
 
     public void InverseSolution()

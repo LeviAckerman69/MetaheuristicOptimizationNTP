@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using MetaheuristicOptimizationNTP.Structures;
 
 namespace MetaheuristicOptimizationNTP;
 
@@ -12,14 +13,21 @@ public partial class MainWindow : Window
         InitializeComponent();
         Storage.Towns.Register(TownDisplay);
 
-        ButtonMutate.Click += ButtonMutate_Click;
+        ButtonSwap.Click += ButtonSwap_Click;
+        ButtonInsert.Click += ButtonInsert_Click;
         ButtonInverse.Click += ButtonInverse_Click;
         ButtonScramble.Click += ButtonScramble_Click;
     }
 
-    private void ButtonMutate_Click(object sender, RoutedEventArgs e)
+    private void ButtonSwap_Click(object sender, RoutedEventArgs e)
     {
-        TownDisplay.MutateSolution();
+        TownDisplay.SwapSolution();
+        TownDisplay.InvalidateVisual();
+    }
+
+    private void ButtonInsert_Click(object sender, RoutedEventArgs e)
+    {
+        TownDisplay.InsertSolution();
         TownDisplay.InvalidateVisual();
     }
 
