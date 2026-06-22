@@ -18,10 +18,7 @@ public class TownsList
         NotifyListeners();
     }
 
-    public IReadOnlyList<Town> Get()
-    {
-        return Towns;
-    }
+    public IReadOnlyList<Town> TownsView => Towns.AsReadOnly();
 
     public void Register(ITownsListener listener)
     {

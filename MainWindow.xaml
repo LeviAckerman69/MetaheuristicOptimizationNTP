@@ -6,10 +6,19 @@
     xmlns:Components="clr-namespace:MetaheuristicOptimizationNTP.Components"
     x:Class="MetaheuristicOptimizationNTP.MainWindow"
     mc:Ignorable="d"
-    Title="MainWindow" Height="550" Width="900">
-    <Grid x:Name="MainGrid" Background="Transparent">
-        <Border Margin="48,38,178,36" BorderBrush="Black" BorderThickness="2">
-            <Components:TownDisplay x:Name="TownDisplay" Margin="23,26,24,34" />
+    Title="MainWindow"
+    Height="550"
+    Width="900">
+    <Grid
+        x:Name="MainGrid"
+        Background="Transparent">
+        <Border
+            Margin="48,38,178,36"
+            BorderBrush="Black"
+            BorderThickness="2">
+            <Components:TownDisplay
+                x:Name="TownDisplay"
+                Margin="23,26,24,34" />
         </Border>
 
         <Button
@@ -17,39 +26,86 @@
             Content="Swap"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
-            Margin="0,127,40,0"
+            Margin="0,44,37,0"
             Width="80"
             Height="50"
-            FontSize="16"/>
+            FontSize="16" />
 
         <Button
             x:Name="ButtonInverse"
             Content="Inverse"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
-            Margin="0,237,40,0"
+            Margin="0,154,37,0"
             Width="80"
             Height="50"
-            FontSize="16"/>
+            FontSize="16" />
 
         <Button
             x:Name="ButtonScramble"
             Content="Scramble"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
-            Margin="0,292,40,0"
+            Margin="0,209,37,0"
             Width="80"
-            Height="50"
-            FontSize="16"/>
+            Height="51"
+            FontSize="16" />
+
         <Button
             x:Name="ButtonInsert"
             Content="Insert"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
-            Margin="0,182,40,0"
+            Margin="0,100,37,0"
             Width="80"
             Height="50"
-            FontSize="16"/>
+            FontSize="16" />
+        <Button
+            x:Name="ButtonCreatePopulation"
+            Content="Create Population"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Margin="0,267,6,0"
+            Width="153"
+            Height="51"
+            FontSize="16"
+            Click="ButtonCreatePopulation_Click" />
+        <ListBox
+            x:Name="ListPopulation"
+            HorizontalAlignment="Left"
+            Height="107"
+            Margin="741,323,0,0"
+            VerticalAlignment="Top"
+            Width="149"
+            SelectionMode="Single" />
+
+        <Button
+            x:Name="ButtonEvolve"
+            Content="Evolve"
+            HorizontalAlignment="Left"
+            Height="51"
+            Margin="755,447,0,0"
+            VerticalAlignment="Top"
+            Width="114" />
+
+        <Label
+            x:Name="LabelBest"
+            Content="Best Fitness"
+            HorizontalAlignment="Left"
+            Height="34"
+            Margin="64,500,0,0"
+            VerticalAlignment="Top"
+            Width="118"
+            RenderTransformOrigin="0.551,1.24" />
+
+        <Label
+            x:Name="LabelAverage"
+            Content="Average Fitness"
+            HorizontalAlignment="Left"
+            Height="34"
+            Margin="267,500,0,0"
+            VerticalAlignment="Top"
+            Width="118" />
 
 
         <!--<Button x:Name="ButtonMutate" Content="Mutate" HorizontalAlignment="Left" Height="30" Margin="780,127,0,0" VerticalAlignment="Top" Width="60" />-->

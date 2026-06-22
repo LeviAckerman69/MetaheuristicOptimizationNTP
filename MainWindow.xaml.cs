@@ -1,5 +1,7 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using MetaheuristicOptimizationNTP.Structures;
+using MetaheuristicOptimizationNTP.ViewModel;
 
 namespace MetaheuristicOptimizationNTP;
 
@@ -13,33 +15,50 @@ public partial class MainWindow : Window
         InitializeComponent();
         Storage.Towns.Register(TownDisplay);
 
-        ButtonSwap.Click += ButtonSwap_Click;
-        ButtonInsert.Click += ButtonInsert_Click;
-        ButtonInverse.Click += ButtonInverse_Click;
-        ButtonScramble.Click += ButtonScramble_Click;
+        ListPopulation.SelectionChanged += ListPopulationOnSelectionChanged;
+
+        //ButtonSwap.Click += ButtonSwap_Click;
+        //ButtonInsert.Click += ButtonInsert_Click;
+        //ButtonInverse.Click += ButtonInverse_Click;
+        //ButtonScramble.Click += ButtonScramble_Click;
     }
 
-    private void ButtonSwap_Click(object sender, RoutedEventArgs e)
+    private void ListPopulationOnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        TownDisplay.SwapSolution();
-        TownDisplay.InvalidateVisual();
+        Storage.PopulationListHelper.SelectedIndex = ListPopulation.SelectedIndex;
     }
 
-    private void ButtonInsert_Click(object sender, RoutedEventArgs e)
-    {
-        TownDisplay.InsertSolution();
-        TownDisplay.InvalidateVisual();
-    }
+    //private void ButtonSwap_Click(object sender, RoutedEventArgs e)
+    //{
+    //    TownDisplay.SwapSolution();
+    //    TownDisplay.InvalidateVisual();
+    //}
 
-    private void ButtonInverse_Click(object sender, RoutedEventArgs e)
-    {
-        TownDisplay.InverseSolution();
-        TownDisplay.InvalidateVisual();
-    }
+    //private void ButtonInsert_Click(object sender, RoutedEventArgs e)
+    //{
+    //    TownDisplay.InsertSolution();
+    //    TownDisplay.InvalidateVisual();
+    //}
 
-    private void ButtonScramble_Click(object sender, RoutedEventArgs e)
+    //private void ButtonInverse_Click(object sender, RoutedEventArgs e)
+    //{
+    //    TownDisplay.InverseSolution();
+    //    TownDisplay.InvalidateVisual();
+    //}
+
+    //private void ButtonScramble_Click(object sender, RoutedEventArgs e)
+    //{
+    //    TownDisplay.ScrambleSolution();
+    //    TownDisplay.InvalidateVisual();
+    //}
+
+    private void ButtonCreatePopulation_Click(object sender, RoutedEventArgs e)
     {
-        TownDisplay.ScrambleSolution();
+        Storage.Population = new Population(Storage.Towns, 1000);
+        Storage.PopulationListHelper = new PopulationListHelper(Storage.Population, ListPopulation);
+        Storage.PopulationListHelper.Register(TownDisplay);
         TownDisplay.InvalidateVisual();
+
+        ListPopulation.ItemsSource = Storage.PopulationListHelper.SolutionsFormatted;
     }
 }

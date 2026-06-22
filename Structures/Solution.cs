@@ -1,168 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿namespace MetaheuristicOptimizationNTP.Structures;
 
-namespace MetaheuristicOptimizationNTP.Structures
+public partial class Solution
 {
-    public class Solution
+    private static int SolutionCounter;
+
+    private static readonly Random Random = new();
+
+    public int Id { get; private set; }
+
+    private List<int> Permutation { get; }
+
+    public IReadOnlyList<int> PermutationView => Permutation.AsReadOnly();
+
+    public double Fitness { get; private set; }
+
+    private Solution()
     {
-        private static readonly Random Random = new Random();
+        SolutionCounter++;
+        Id = SolutionCounter;
+    }
 
-        public List<int> Permutation { get; }
+    public Solution(TownsList townsList, bool shuffle = false) : this()
+    {
+        Permutation = Enumerable.Range(0, townsList.Count).ToList();
 
-        public Solution(TownsList townsList, bool shuffle = false)
+        if (shuffle)
         {
-            Permutation = Enumerable.Range(0, townsList.Count).ToList();
-
-            if (shuffle)
-            {
-                Permutation = Permutation.Shuffle().ToList();
-            }
+            Permutation = Permutation.Shuffle().ToList();
         }
+    }
 
-        private Solution(List<int> currentPermutation)
+    private Solution(List<int> currentPermutation) : this()
+    {
+        Permutation = new List<int>(currentPermutation);
+    }
+
+    public void Evaluate(TownsList townsList)
+    {
+        Fitness = 0;
+
+        for (var i = 0; i < townsList.Count; i++)
         {
-            Permutation = new List<int>(currentPermutation);
-        }
+            var currentTownId = Permutation[i];
+            var currentTown = townsList.TownsView[currentTownId];
 
+            var nextTownId = Permutation[(i + 1) % townsList.Count];
+            var nextTown = townsList.TownsView[nextTownId];
 
-        public Solution SwapMutation()
-        {
-            var townCount = Permutation.Count;
-
-            if (townCount < 2)
-            {
-                return new Solution(Permutation);
-            }
-
-            var mutatedSolution = new Solution(Permutation);
-
-            var i = Random.Next(townCount);
-            var j = Random.Next(townCount);
-
-            while (i == j)
-            {
-                j = Random.Next(townCount);
-            }
-
-            mutatedSolution.Permutation[i] = Permutation[j];
-            mutatedSolution.Permutation[j] = Permutation[i];
-
-            if (mutatedSolution.Permutation.Distinct().Count() != townCount)
-            {
-                throw new Exception("Permutation corrupted!");
-            }
-
-            return mutatedSolution;
-        }
-
-        public Solution InsertMutation()
-        {
-            var townCount = Permutation.Count;
-
-            if (townCount < 2)
-            {
-                return new Solution(Permutation);
-            }
-
-            var mutatedSolution = new Solution(Permutation);
-
-            var currentPosition = Random.Next(townCount);
-
-            var newPosition = Random.Next(townCount);
-
-            while (newPosition == currentPosition)
-            {
-                newPosition = Random.Next(townCount);
-            }
-
-            var temp = mutatedSolution.Permutation[currentPosition];
-            mutatedSolution.Permutation.RemoveAt(currentPosition);
-            mutatedSolution.Permutation.Insert(newPosition, temp);
-
-            if (mutatedSolution.Permutation.Distinct().Count() != townCount)
-            {
-                throw new Exception("Permutation corrupted!");
-            }
-
-            return mutatedSolution;
-        }
-
-
-        public Solution InversionMutation(double percentageMutated = 0.2)
-        {
-            var townCount = Permutation.Count;
-
-            if (townCount < 2)
-            {
-                return new Solution(Permutation);
-            }
-
-            var mutatedSolution = new Solution(Permutation);
-
-            var mutationLength = (int)Math.Ceiling(percentageMutated * townCount);
-
-            if (mutationLength < 3)
-            {
-                mutationLength = 3;
-            }
-
-            var i = Random.Next(townCount);
-
-
-            for (var j = 0; j < mutationLength; j++)
-                mutatedSolution.Permutation[(i + j) % townCount] =
-                    Permutation[(i + mutationLength - 1 - j) % townCount];
-
-            if (mutatedSolution.Permutation.Distinct().Count() != townCount)
-            {
-                throw new Exception("Permutation corrupted!");
-            }
-
-            return mutatedSolution;
-        }
-
-        public Solution ScrambleMutation(double percentageMutated = 0.2)
-        {
-            var townCount = Permutation.Count;
-
-            if (townCount < 2)
-            {
-                return new Solution(Permutation);
-            }
-
-            var mutatedSolution = new Solution(Permutation);
-
-            var mutationLength = (int)Math.Ceiling(percentageMutated * townCount);
-
-            if (mutationLength < 3)
-            {
-                mutationLength = 3;
-            }
-
-            var i = Random.Next(townCount);
-
-            var segment = new List<int>();
-
-            for (var j = 0; j < mutationLength; j++)
-            {
-                segment.Add(mutatedSolution.Permutation[(i + j) % townCount]);
-            }
-
-            segment = segment.Shuffle().ToList();
-
-            for (var j = 0; j < mutationLength; j++)
-            {
-                mutatedSolution.Permutation[(i + j) % townCount] = segment[j];
-            }
-
-            if (mutatedSolution.Permutation.Distinct().Count() != townCount)
-            {
-                throw new Exception("Permutation corrupted!");
-            }
-
-            return mutatedSolution;
+            var distance = currentTown.DistanceTo(nextTown);
+            Fitness += distance;
         }
     }
 }
