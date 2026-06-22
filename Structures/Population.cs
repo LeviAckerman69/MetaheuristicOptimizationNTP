@@ -1,32 +1,29 @@
-﻿using System.Xml.Linq;
+﻿using System.Collections.ObjectModel;
+using System.Xml.Linq;
 
 namespace MetaheuristicOptimizationNTP.Structures;
 
 public class Population
 {
-    private List<Solution> Solutions { get; }
+    private ObservableCollection<Solution> Solutions { get; }
 
-    public IReadOnlyList<Solution> SolutionsView => Solutions.AsReadOnly();
+    private IReadOnlyList<Town> TownsList { get; set; }
 
-    private TownsList TownsList { get; set; }
-
-    public int Count => Solutions.Count;
-
-
-    public Population(TownsList townsList, int popSize = 100)
+    public Population(List<Town> townsList, int popSize = 100)
     {
         TownsList = townsList;
+        Solutions = [];
 
-        Solutions = new List<Solution>();
+        var solutions = new List<Solution>();
 
         for (var i = 0; i < popSize; i++)
         {
-            var solution = new Solution(townsList, true);
-            solution.Evaluate(townsList);
+            var solution = new Solution(TownsList, true);
+            solution.Evaluate(TownsList);
             Solutions.Add(solution);
         }
 
-        Solutions = Solutions.OrderBy(solution => solution.Fitness).ToList();
+        Solutions = new ObservableCollection<Solution>(solutions.OrderBy(solution => solution.Fitness).ToList());
     }
  
 }

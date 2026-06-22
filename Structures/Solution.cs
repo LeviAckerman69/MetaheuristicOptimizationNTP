@@ -20,7 +20,7 @@ public partial class Solution
         Id = SolutionCounter;
     }
 
-    public Solution(TownsList townsList, bool shuffle = false) : this()
+    public Solution(IReadOnlyList<Town> townsList, bool shuffle = false) : this()
     {
         Permutation = Enumerable.Range(0, townsList.Count).ToList();
 
@@ -35,17 +35,17 @@ public partial class Solution
         Permutation = new List<int>(currentPermutation);
     }
 
-    public void Evaluate(TownsList townsList)
+    public void Evaluate(IReadOnlyList<Town> townsList)
     {
         Fitness = 0;
 
         for (var i = 0; i < townsList.Count; i++)
         {
             var currentTownId = Permutation[i];
-            var currentTown = townsList.TownsView[currentTownId];
+            var currentTown = townsList[currentTownId];
 
             var nextTownId = Permutation[(i + 1) % townsList.Count];
-            var nextTown = townsList.TownsView[nextTownId];
+            var nextTown = townsList[nextTownId];
 
             var distance = currentTown.DistanceTo(nextTown);
             Fitness += distance;
