@@ -8,6 +8,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        DataContext = new MainViewModel();
+        var viewModel = new MainViewModel();
+        DataContext = viewModel;
     }
 }

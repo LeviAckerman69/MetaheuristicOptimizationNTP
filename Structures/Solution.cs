@@ -6,13 +6,15 @@ public partial class Solution
 
     private static readonly Random Random = new();
 
-    public int Id { get; private set; }
+    public int Id { get; }
 
     private List<int> Permutation { get; }
 
     public IReadOnlyList<int> PermutationView => Permutation.AsReadOnly();
 
     public double Fitness { get; private set; }
+
+    public string SolutionFormat => $"#{Id} - Fitness: {Fitness}";
 
     private Solution()
     {
@@ -30,10 +32,7 @@ public partial class Solution
         }
     }
 
-    private Solution(List<int> currentPermutation) : this()
-    {
-        Permutation = new List<int>(currentPermutation);
-    }
+    private Solution(List<int> currentPermutation) : this() { Permutation = new List<int>(currentPermutation); }
 
     public void Evaluate(IReadOnlyList<Town> townsList)
     {

@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Xml.Linq;
 
 namespace MetaheuristicOptimizationNTP.Structures;
 
@@ -7,7 +6,7 @@ public class Population
 {
     private ObservableCollection<Solution> Solutions { get; }
 
-    private IReadOnlyList<Town> TownsList { get; set; }
+    private IReadOnlyList<Town> TownsList { get; }
 
     public Population(List<Town> townsList, int popSize = 100)
     {
@@ -25,5 +24,4 @@ public class Population
 
         Solutions = new ObservableCollection<Solution>(solutions.OrderBy(solution => solution.Fitness).ToList());
     }
- 
 }

@@ -1,27 +1,27 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using MetaheuristicOptimizationNTP.Structures;
+using MetaheuristicOptimizationNTP.ViewModel;
 
 namespace MetaheuristicOptimizationNTP.Components;
 
 public class TownDisplay : FrameworkElement
 {
-    private ITownDisplayViewModel ViewModel => DataContext as ITownDisplayViewModel;
+    private MockViewModel MockViewModel { get; } = new();
+    private ITownDisplayViewModel ViewModel => DataContext as ITownDisplayViewModel ?? MockViewModel;
 
     public TownDisplay()
     {
-        Loaded += (sender, args) =>
-        {
-            ViewModel.Towns.CollectionChanged += (sender, args) => InvalidateVisual();
-        };
+        Loaded += (sender, args) => { ViewModel.Towns.CollectionChanged += (sender, args) => InvalidateVisual(); };
     }
 
     protected override void OnRender(DrawingContext drawingContext)
     {
         base.OnRender(drawingContext);
         drawingContext.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
-
 
         foreach (var town in ViewModel.Towns)
         {
@@ -37,9 +37,20 @@ public class TownDisplay : FrameworkElement
         base.OnMouseLeftButtonDown(e);
         var position = e.GetPosition(this);
 
-        if (ViewModel.FindTownAtPosition(position, 4) == null)
+        if (ViewModel.FindTownAtPosition(position, 4.0) is not null)
         {
-            ViewModel.AddTownAt(position);
+            var toolTip = new ToolTip
+            {
+                Content = "Town already exists here.",
+                Placement = PlacementMode.MousePoint,
+                PlacementTarget = Mouse.DirectlyOver as UIElement,
+                StaysOpen = false,
+                IsOpen = true
+            };
+
+            return;
         }
+
+        ViewModel.AddTownAt(position);
     }
 }

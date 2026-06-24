@@ -1,24 +1,82 @@
 ﻿<Window
+    x:Class="MetaheuristicOptimizationNTP.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Components="clr-namespace:MetaheuristicOptimizationNTP.Components"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Components="clr-namespace:MetaheuristicOptimizationNTP.Components"
-    x:Class="MetaheuristicOptimizationNTP.MainWindow"
-    mc:Ignorable="d"
+    xmlns:structures="clr-namespace:MetaheuristicOptimizationNTP.Structures"
+    xmlns:viewModel="clr-namespace:MetaheuristicOptimizationNTP.ViewModel"
     Title="MainWindow"
+    Width="900"
     Height="550"
-    Width="900">
-    <Grid
-        x:Name="MainGrid"
-        Background="Transparent">
+    d:DataContext="{d:DesignInstance Type=viewModel:MainViewModel}"
+    mc:Ignorable="d">
+
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="8,6" />
+            <Setter Property="MinWidth" Value="90" />
+            <Setter Property="Margin" Value="0,4,0,4" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="Transparent">
         <Border
             Margin="48,38,178,36"
             BorderBrush="Black"
             BorderThickness="2">
-            <Components:TownDisplay
-                x:Name="TownDisplay"
-                Margin="23,26,24,34" />
+            <Components:TownDisplay Margin="23,26,24,34" />
         </Border>
+
+        <Grid Margin="753,38,10,36">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Label
+                Grid.Row="0"
+                Grid.Column="0"
+                HorizontalAlignment="Right"
+                Content="Size:" />
+
+            <TextBox
+                Grid.Row="0"
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                Text="{Binding PopulationSize}" />
+
+            <Button
+                x:Name="ButtonCreatePopulation"
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Command="{Binding CreatePopulationCommand}"
+                Content="Create Population" />
+
+            <ListBox
+                Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                ItemsSource="{Binding Population}"
+                SelectedItem="{Binding SelectedSolution, Mode=TwoWay}"
+                SelectionMode="Single">
+
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="structures:Solution">
+                        <TextBlock Text="{Binding SolutionFormat}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
     </Grid>
 </Window>
