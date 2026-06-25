@@ -1,11 +1,14 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Windows;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MetaheuristicOptimizationNTP.Components;
 using MetaheuristicOptimizationNTP.Structures;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 
 namespace MetaheuristicOptimizationNTP.ViewModel;
 
@@ -42,7 +45,39 @@ public partial class MainViewModel : ObservableValidator, ITownDisplayViewModel
 
     public Population Population { get; } = new();
 
-    public void AddTownAt(Point point)
+    [RelayCommand]
+    public void AddTownAtPoint(Point point)
+    {
+        if (FindTownAtPosition(point, 4.0) is not null)
+        {
+            var toolTip = new ToolTip
+            {
+                Content = "Town already exists here.",
+                Placement = PlacementMode.MousePoint,
+                PlacementTarget = Mouse.DirectlyOver as UIElement,
+                StaysOpen = false,
+                IsOpen = true
+            };
+
+            return;
+        }
+
+        AddTown(point);
+    }
+
+    [RelayCommand]
+    public void RemoveTownAtPoint(Point point)
+    {
+        var town = FindTownAtPosition(point, 1.0);
+
+        if (town is not null)
+        {
+            RemoveTown(town);
+        }
+    }
+
+
+    private void AddTown(Point point)
     {
         NextTownId++;
         var town = new Town
@@ -54,7 +89,7 @@ public partial class MainViewModel : ObservableValidator, ITownDisplayViewModel
         Towns.Add(town);
     }
 
-    public Town? FindTownAtPosition(Point position, double scalingFactor = 1)
+    private Town? FindTownAtPosition(Point position, double scalingFactor = 1)
     {
         foreach (var town in Towns.Reverse())
         {
@@ -67,7 +102,7 @@ public partial class MainViewModel : ObservableValidator, ITownDisplayViewModel
         return null;
     }
 
-    public bool RemoveTown(Town town)
+    private bool RemoveTown(Town town)
     {
         return Towns.Remove(town);
     }
@@ -106,8 +141,15 @@ public partial class MainViewModel : ObservableValidator, ITownDisplayViewModel
         var solutionA = Population.Solutions[idA];
         var solutionB = Population.Solutions[idB];
 
-        var crossover = solutionA.OrderCrossover(solutionB);
         var random = Random.NextDouble();
+        var crossover = random switch
+        {
+            < 0.333 => solutionA.OrderCrossover(solutionB),
+            < 0.667 => solutionA.PartiallyMappedCrossover(solutionB),
+            _ => solutionA.CycleCrossover(solutionB)
+        };
+
+        random = Random.NextDouble();
         
         var mutated = random switch
         {
@@ -121,7 +163,7 @@ public partial class MainViewModel : ObservableValidator, ITownDisplayViewModel
         var rank = Population.Solutions.Select(solution => solution.Fitness)
             .TakeWhile(fitness => fitness < mutated.Fitness).Count();
 
-        if (!Population.Solutions.Select(solution => solution.Fitness).Contains(mutated.Fitness)) {
+        if (!Population.Solutions.Select(solution => (float) solution.Fitness ).Contains((float) mutated.Fitness)) {
             Population.Solutions.Insert(rank, mutated);
             Population.Solutions.RemoveAt(Population.Solutions.Count - 1);
         }

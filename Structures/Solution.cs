@@ -39,6 +39,11 @@ public partial class Solution
 
     private Solution(IReadOnlyList<Town> towns, List<int> permutation) : this(towns)
     {
+        if (permutation.Distinct().Count() != towns.Count)
+        {
+            throw new Exception("Permutation corrupted!");
+        }
+
         Permutation = new List<int>(permutation);
         Fitness = Evaluate(towns);
     }

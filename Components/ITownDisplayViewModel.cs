@@ -1,26 +1,19 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
+using CommunityToolkit.Mvvm.Input;
 using MetaheuristicOptimizationNTP.Structures;
 
 namespace MetaheuristicOptimizationNTP.Components;
 
 public interface ITownDisplayViewModel
 {
-    ObservableCollection<Town> Towns => null;
+    ObservableCollection<Town> Towns { get; }
 
-    Population Population => null;
+    Population Population { get; }
 
-    Solution? SelectedSolution => null;
+    Solution? SelectedSolution { get; }
 
-    void AddTownAt(Point point) { }
+    IRelayCommand<Point> AddTownAtPointCommand { get; }
 
-    Town? FindTownAtPosition(Point position, double distance)
-    {
-        return null;
-    }
-
-    bool RemoveTown(Town town)
-    {
-        return false;
-    }
+    IRelayCommand<Point> RemoveTownAtPointCommand { get; }
 }

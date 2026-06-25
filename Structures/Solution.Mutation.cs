@@ -25,12 +25,8 @@ public partial class Solution
             [j] = Permutation[i]
         };
 
-        if (permutation.Distinct().Count() != townCount)
-        {
-            throw new Exception("Permutation corrupted!");
-        }
 
-        return new Solution(Towns, Permutation);
+        return new Solution(Towns, permutation);
     }
 
     public Solution InsertMutation()
@@ -55,12 +51,7 @@ public partial class Solution
         permutation.RemoveAt(currentPosition);
         permutation.Insert(newPosition, Permutation[currentPosition]);
 
-        if (permutation.Distinct().Count() != townCount)
-        {
-            throw new Exception("Permutation corrupted!");
-        }
-
-        return new Solution(Towns, Permutation);
+        return new Solution(Towns, permutation);
     }
 
 
@@ -91,11 +82,6 @@ public partial class Solution
             permutation[(i + j) % townCount] = Permutation[(i + mutationLength - 1 - j) % townCount];
         }
 
-        if (permutation.Distinct().Count() != townCount)
-        {
-            throw new Exception("Permutation corrupted!");
-        }
-
         return new Solution(Towns, permutation);
     }
 
@@ -120,7 +106,6 @@ public partial class Solution
         var permutation = new List<int>(Permutation);
         var segment = new List<int>();
 
-
         for (var j = 0; j < mutationLength; j++)
         {
             segment.Add(permutation[(i + j) % townCount]);
@@ -133,10 +118,6 @@ public partial class Solution
             permutation[(i + j) % townCount] = segment[j];
         }
 
-        if (permutation.Distinct().Count() != townCount)
-        {
-            throw new Exception("Permutation corrupted!");
-        }
 
         return new Solution(Towns, permutation);
     }

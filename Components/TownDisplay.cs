@@ -73,21 +73,7 @@ public class TownDisplay : FrameworkElement
         base.OnMouseLeftButtonDown(e);
         var position = e.GetPosition(this);
 
-        if (ViewModel.FindTownAtPosition(position, 4.0) is not null)
-        {
-            var toolTip = new ToolTip
-            {
-                Content = "Town already exists here.",
-                Placement = PlacementMode.MousePoint,
-                PlacementTarget = Mouse.DirectlyOver as UIElement,
-                StaysOpen = false,
-                IsOpen = true
-            };
-
-            return;
-        }
-
-        ViewModel.AddTownAt(position);
+        ViewModel.AddTownAtPointCommand.Execute(position);
     }
 
     protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
@@ -95,11 +81,6 @@ public class TownDisplay : FrameworkElement
         base.OnMouseRightButtonDown(e);
         var position = e.GetPosition(this);
 
-        var town = ViewModel.FindTownAtPosition(position, 1.0);
-
-        if (town is not null)
-        {
-            ViewModel.RemoveTown(town);
-        }
+        ViewModel.RemoveTownAtPointCommand.Execute(position);
     }
 }
