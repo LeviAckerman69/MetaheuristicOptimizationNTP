@@ -1,27 +1,20 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using MetaheuristicOptimizationNTP.Components;
-using MetaheuristicOptimizationNTP.Structures;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using MetaheuristicOptimizationNTP.Components;
+using MetaheuristicOptimizationNTP.Genetic;
+using MetaheuristicOptimizationNTP.Structures;
 
 namespace MetaheuristicOptimizationNTP.ViewModel;
 
 public partial class MainViewModel : ObservableValidator, ITownDisplayViewModel
 {
     private Random Random { get; } = new();
-    public MainViewModel()
-    {
-        Towns.CollectionChanged += (sender, args) =>
-        {
-            Population.Solutions.Clear();
-        };
-    }
 
     private CancellationTokenSource? Cts { get; set; }
 
@@ -40,6 +33,13 @@ public partial class MainViewModel : ObservableValidator, ITownDisplayViewModel
 
     [ObservableProperty]
     public partial Solution? SelectedSolution { get; set; }
+
+    public string EvolveText => IsEvolving ? "Stop" : "Evolve";
+
+    public MainViewModel()
+    {
+        Towns.CollectionChanged += (sender, args) => { Population.Solutions.Clear(); };
+    }
 
     public ObservableCollection<Town> Towns { get; } = [];
 
@@ -68,7 +68,7 @@ public partial class MainViewModel : ObservableValidator, ITownDisplayViewModel
     [RelayCommand]
     public void RemoveTownAtPoint(Point point)
     {
-        var town = FindTownAtPosition(point, 1.0);
+        var town = FindTownAtPosition(point);
 
         if (town is not null)
         {
@@ -141,37 +141,27 @@ public partial class MainViewModel : ObservableValidator, ITownDisplayViewModel
         var solutionA = Population.Solutions[idA];
         var solutionB = Population.Solutions[idB];
 
-        var random = Random.NextDouble();
-        var crossover = random switch
-        {
-            < 0.333 => solutionA.OrderCrossover(solutionB),
-            < 0.667 => solutionA.PartiallyMappedCrossover(solutionB),
-            _ => solutionA.CycleCrossover(solutionB)
-        };
+        var crossoverAlgorithmId = Random.Next(Crossover.CrossoverAlgorithms.Count);
+        var crossoverAlgorithm = Crossover.CrossoverAlgorithms[crossoverAlgorithmId];
 
-        random = Random.NextDouble();
-        
-        var mutated = random switch
-        {
-            < 0.2 => crossover.SwapMutation(),
-            < 0.4 => crossover.InsertMutation(),
-            < 0.6 => crossover.InversionMutation(),
-            < 0.8 => crossover.ScrambleMutation(),
-            _ => crossover
-        };
+        var crossover = crossoverAlgorithm(solutionA, solutionB);
+
+        var mutationAlgorithmId = Random.Next(Mutation.MutationAlgorithms.Count);
+        var mutationAlgorithm = Mutation.MutationAlgorithms[mutationAlgorithmId];
+
+        var mutated = mutationAlgorithm(crossover);
 
         var rank = Population.Solutions.Select(solution => solution.Fitness)
             .TakeWhile(fitness => fitness < mutated.Fitness).Count();
 
-        if (!Population.Solutions.Select(solution => (float) solution.Fitness ).Contains((float) mutated.Fitness)) {
+        if (!Population.Solutions.Select(solution => (float)solution.Fitness).Contains((float)mutated.Fitness))
+        {
             Population.Solutions.Insert(rank, mutated);
             Population.Solutions.RemoveAt(Population.Solutions.Count - 1);
         }
 
         SelectedSolution = Population.Solutions[0];
     }
-
-    public string EvolveText => IsEvolving ? "Stop" : "Evolve";
 
     [RelayCommand]
     public async void Evolve()

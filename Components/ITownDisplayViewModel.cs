@@ -1,7 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
 using CommunityToolkit.Mvvm.Input;
+using MetaheuristicOptimizationNTP.Genetic;
 using MetaheuristicOptimizationNTP.Structures;
+using Solution = MetaheuristicOptimizationNTP.Genetic.Solution;
 
 namespace MetaheuristicOptimizationNTP.Components;
 

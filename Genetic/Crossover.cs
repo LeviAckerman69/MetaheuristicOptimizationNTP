@@ -1,11 +1,20 @@
-﻿namespace MetaheuristicOptimizationNTP.Structures;
+﻿using MetaheuristicOptimizationNTP.Structures;
 
-public partial class Solution
+namespace MetaheuristicOptimizationNTP.Genetic;
+
+using CrossoverAlgorithm = Func<Solution, Solution, Solution>;
+
+public class Crossover
 {
-    public Solution OrderCrossover(Solution other)
+    private static Random Random { get; } = new();
+
+    public static List<CrossoverAlgorithm> CrossoverAlgorithms =>
+        [OrderCrossover, PartiallyMappedCrossover, CycleCrossover];
+
+    public static Solution OrderCrossover(Solution parentA, Solution parentB)
     {
-        var permutationA = PermutationView;
-        var permutationB = other.PermutationView;
+        var permutationA = parentA.PermutationView;
+        var permutationB = parentB.PermutationView;
 
         var count = permutationA.Count;
         var beginOffset = Random.Next(count);
@@ -29,20 +38,20 @@ public partial class Solution
 
         {
             var offset = endOffset;
-            foreach (var element in permutationB.Where(p => !copied.Contains(p)))
+            foreach (var element in Enumerable.Where<int>(permutationB, p => !copied.Contains(p)))
             {
                 permutationResult[offset] = element;
                 offset = (offset + 1) % count;
             }
         }
 
-        return new Solution(Towns, permutationResult);
+        return new Solution(parentA.Towns, permutationResult);
     }
 
-    public Solution PartiallyMappedCrossover(Solution other)
+    public static Solution PartiallyMappedCrossover(Solution parentA, Solution parentB)
     {
-        var permutationA = PermutationView;
-        var permutationB = other.PermutationView;
+        var permutationA = parentA.PermutationView;
+        var permutationB = parentB.PermutationView;
 
         var count = permutationA.Count;
         var beginOffset = Random.Next(count);
@@ -73,16 +82,17 @@ public partial class Solution
             {
                 valueB = mapping[valueB];
             }
+
             permutationResult[(endOffset + i) % count] = valueB;
         }
 
-        return new Solution(Towns, permutationResult);
+        return new Solution(parentA.Towns, permutationResult);
     }
 
-    public Solution CycleCrossover(Solution other)
+    public static Solution CycleCrossover(Solution parentA, Solution parentB)
     {
-        var permutationA = PermutationView.ToList();
-        var permutationB = other.PermutationView.ToList();
+        var permutationA = Enumerable.ToList<int>(parentA.PermutationView);
+        var permutationB = Enumerable.ToList<int>(parentB.PermutationView);
 
         var count = permutationA.Count;
 
@@ -106,6 +116,6 @@ public partial class Solution
             }
         }
 
-        return new Solution(Towns, permutationResult);
+        return new Solution(parentA.Towns, permutationResult);
     }
 }

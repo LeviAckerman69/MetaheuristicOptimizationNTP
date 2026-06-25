@@ -1,6 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using MetaheuristicOptimizationNTP.Structures;
+using System.Collections.ObjectModel;
 
-namespace MetaheuristicOptimizationNTP.Structures;
+namespace MetaheuristicOptimizationNTP.Genetic;
 
 public class Population
 {

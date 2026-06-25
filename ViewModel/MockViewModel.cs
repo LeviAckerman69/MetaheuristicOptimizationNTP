@@ -2,7 +2,9 @@
 using System.Windows;
 using CommunityToolkit.Mvvm.Input;
 using MetaheuristicOptimizationNTP.Components;
+using MetaheuristicOptimizationNTP.Genetic;
 using MetaheuristicOptimizationNTP.Structures;
+using Solution = MetaheuristicOptimizationNTP.Genetic.Solution;
 
 namespace MetaheuristicOptimizationNTP.ViewModel;
 

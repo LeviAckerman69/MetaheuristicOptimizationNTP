@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Components="clr-namespace:MetaheuristicOptimizationNTP.Components"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:genetic="clr-namespace:MetaheuristicOptimizationNTP.Genetic"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:structures="clr-namespace:MetaheuristicOptimizationNTP.Structures"
     xmlns:viewModel="clr-namespace:MetaheuristicOptimizationNTP.ViewModel"
@@ -79,7 +80,7 @@
                 SelectionMode="Single">
 
                 <ListBox.ItemTemplate>
-                    <DataTemplate DataType="structures:Solution">
+                    <DataTemplate DataType="{x:Type genetic:Solution}">
                         <TextBlock Text="{Binding SolutionFormat}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>

@@ -1,4 +1,6 @@
-﻿namespace MetaheuristicOptimizationNTP.Structures;
+﻿using MetaheuristicOptimizationNTP.Structures;
+
+namespace MetaheuristicOptimizationNTP.Genetic;
 
 public partial class Solution
 {
@@ -37,7 +39,7 @@ public partial class Solution
         Fitness = Evaluate(towns);
     }
 
-    private Solution(IReadOnlyList<Town> towns, List<int> permutation) : this(towns)
+    public Solution(IReadOnlyList<Town> towns, List<int> permutation) : this(towns)
     {
         if (permutation.Distinct().Count() != towns.Count)
         {
