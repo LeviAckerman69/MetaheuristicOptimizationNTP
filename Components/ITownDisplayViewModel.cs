@@ -6,13 +6,21 @@ namespace MetaheuristicOptimizationNTP.Components;
 
 public interface ITownDisplayViewModel
 {
-    ObservableCollection<Town> Towns { get; }
+    ObservableCollection<Town> Towns => null;
 
-    ObservableCollection<Solution> Population { get; }
+    Population Population => null;
+
+    Solution? SelectedSolution => null;
 
     void AddTownAt(Point point) { }
 
-    Town? FindTownAtPosition(Point position, double distance) { return null; }
+    Town? FindTownAtPosition(Point position, double distance)
+    {
+        return null;
+    }
 
-    void CreatePopulation() { }
+    bool RemoveTown(Town town)
+    {
+        return false;
+    }
 }
