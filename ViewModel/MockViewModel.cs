@@ -1,12 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using MetaheuristicOptimizationNTP.Components;
-using MetaheuristicOptimizationNTP.Structures;
+﻿using MetaheuristicOptimizationNTP.Components;
 
 namespace MetaheuristicOptimizationNTP.ViewModel;
 
-public class MockViewModel : ITownDisplayViewModel
-{
-    public ObservableCollection<Town> Towns { get; } = [];
-
-    public ObservableCollection<Solution> Population { get; } = [];
-}
+public class MockViewModel : ITownDisplayViewModel { }

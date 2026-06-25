@@ -26,5 +26,8 @@ public class Town
         return distance.Length;
     }
 
-    public bool Contains(Point other) { return ContainsAtScale(other); }
+    public bool Contains(Point other)
+    {
+        return ContainsAtScale(other);
+    }
 }

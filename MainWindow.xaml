@@ -21,15 +21,21 @@
         </Style>
     </Window.Resources>
 
-    <Grid Background="Transparent">
+    <Grid Margin="10" Background="Transparent">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
         <Border
-            Margin="48,38,178,36"
+            Grid.Column="0"
+            Margin="0"
             BorderBrush="Black"
             BorderThickness="2">
-            <Components:TownDisplay Margin="23,26,24,34" />
+
+            <Components:TownDisplay Margin="20" />
         </Border>
 
-        <Grid Margin="753,38,10,36">
+        <Grid Grid.Column="1" Margin="10,0,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -39,6 +45,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Label
@@ -61,13 +68,13 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
                 Command="{Binding CreatePopulationCommand}"
-                Content="Create Population" />
+                Content="Create population" />
 
             <ListBox
                 Grid.Row="2"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                ItemsSource="{Binding Population}"
+                ItemsSource="{Binding Population.Solutions}"
                 SelectedItem="{Binding SelectedSolution, Mode=TwoWay}"
                 SelectionMode="Single">
 
@@ -77,6 +84,18 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+
+            <Button
+                Grid.Row="3"
+                Grid.Column="0"
+                Command="{Binding StepCommand}"
+                Content="Step" />
+
+            <Button
+                Grid.Row="3"
+                Grid.Column="1"
+                Command="{Binding EvolveCommand}"
+                Content="{Binding EvolveText}" />
         </Grid>
     </Grid>
 </Window>

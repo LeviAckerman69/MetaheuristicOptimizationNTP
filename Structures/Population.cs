@@ -4,24 +4,44 @@ namespace MetaheuristicOptimizationNTP.Structures;
 
 public class Population
 {
-    private ObservableCollection<Solution> Solutions { get; }
+    private static Random Random { get; } = new();
 
-    private IReadOnlyList<Town> TownsList { get; }
+    public ObservableCollection<Solution> Solutions { get; } = [];
 
-    public Population(List<Town> townsList, int popSize = 100)
+    public void Populate(List<Town> towns, int populationSize)
     {
-        TownsList = townsList;
-        Solutions = [];
+        Solutions.Clear();
 
         var solutions = new List<Solution>();
 
-        for (var i = 0; i < popSize; i++)
+        for (var i = 0; i < populationSize; i++)
         {
-            var solution = new Solution(TownsList, true);
-            solution.Evaluate(TownsList);
-            Solutions.Add(solution);
+            var solution = new Solution(towns, true);
+            solutions.Add(solution);
         }
 
-        Solutions = new ObservableCollection<Solution>(solutions.OrderBy(solution => solution.Fitness).ToList());
+        foreach (var solution in solutions.OrderBy(solution => solution.Fitness))
+        {
+            Solutions.Add(solution);
+        }
+    }
+
+    public int RankPick()
+    {
+        var count = Solutions.Count;
+        var totalWeight = count * (count + 1) / 2;
+
+        var pick = Random.Next(totalWeight);
+        for (var score = 0; score < count; score++)
+        {
+            if (pick < count - score)
+            {
+                return score;
+            }
+
+            pick -= count - score;
+        }
+
+        return 0;
     }
 }

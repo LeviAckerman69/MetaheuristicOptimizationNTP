@@ -8,46 +8,57 @@ public partial class Solution
 
     public int Id { get; }
 
-    private List<int> Permutation { get; }
+    public IReadOnlyList<Town> Towns { get; }
+
+    private List<int> Permutation { get; } = [];
 
     public IReadOnlyList<int> PermutationView => Permutation.AsReadOnly();
 
-    public double Fitness { get; private set; }
+    public double Fitness { get; }
 
     public string SolutionFormat => $"#{Id} - Fitness: {Fitness}";
 
-    private Solution()
+    private Solution(IReadOnlyList<Town> towns)
     {
         SolutionCounter++;
         Id = SolutionCounter;
+        Towns = towns;
     }
 
-    public Solution(IReadOnlyList<Town> townsList, bool shuffle = false) : this()
+    public Solution(IReadOnlyList<Town> towns, bool shuffle = false) : this(towns)
     {
-        Permutation = Enumerable.Range(0, townsList.Count).ToList();
+        Permutation = Enumerable.Range(0, towns.Count).ToList();
 
         if (shuffle)
         {
             Permutation = Permutation.Shuffle().ToList();
         }
+
+        Fitness = Evaluate(towns);
     }
 
-    private Solution(List<int> currentPermutation) : this() { Permutation = new List<int>(currentPermutation); }
-
-    public void Evaluate(IReadOnlyList<Town> townsList)
+    private Solution(IReadOnlyList<Town> towns, List<int> permutation) : this(towns)
     {
-        Fitness = 0;
+        Permutation = new List<int>(permutation);
+        Fitness = Evaluate(towns);
+    }
 
-        for (var i = 0; i < townsList.Count; i++)
+    private double Evaluate(IReadOnlyList<Town> towns)
+    {
+        var fitness = 0.0d;
+
+        for (var i = 0; i < towns.Count; i++)
         {
             var currentTownId = Permutation[i];
-            var currentTown = townsList[currentTownId];
+            var currentTown = towns[currentTownId];
 
-            var nextTownId = Permutation[(i + 1) % townsList.Count];
-            var nextTown = townsList[nextTownId];
+            var nextTownId = Permutation[(i + 1) % towns.Count];
+            var nextTown = towns[nextTownId];
 
             var distance = currentTown.DistanceTo(nextTown);
-            Fitness += distance;
+            fitness += distance;
         }
+
+        return fitness;
     }
 }
