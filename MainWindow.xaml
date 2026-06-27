@@ -68,8 +68,7 @@
             Margin="0,267,6,0"
             Width="153"
             Height="51"
-            FontSize="16"
-            Click="ButtonCreatePopulation_Click" />
+            FontSize="16"/>
         <ListBox
             x:Name="ListPopulation"
             HorizontalAlignment="Left"
