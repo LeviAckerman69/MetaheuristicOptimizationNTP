@@ -1,13 +1,10 @@
 ﻿using System.Collections.ObjectModel;
-using System.Xml.Linq;
 
 namespace MetaheuristicOptimizationNTP.Structures;
 
 public class Population
 {
-    private ObservableCollection<Solution> Solutions { get; } = new ObservableCollection<Solution>();
-
-    public IReadOnlyList<Solution> SolutionsView => Solutions.AsReadOnly();
+    public ObservableCollection<Solution> Solutions { get; set; } = new();
 
     private ObservableCollection<Town> TownsList { get; set; }
 
@@ -35,8 +32,5 @@ public class Population
         {
             Solutions.Add(solution);
         }
-
-        
     }
- 
 }

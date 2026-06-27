@@ -1,6 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
-using MetaheuristicOptimizationNTP.Structures;
 using MetaheuristicOptimizationNTP.ViewModel;
 
 namespace MetaheuristicOptimizationNTP;
@@ -14,9 +12,5 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         DataContext = new MainViewModel();
-
-
     }
-
-    
 }

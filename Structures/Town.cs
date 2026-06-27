@@ -12,7 +12,7 @@ public class Town
     public double Y { get; init; }
     public required string Name { get; init; }
 
-    public Point Point => new Point(X, Y);
+    public Point Point => new(X, Y);
 
     public bool ContainsAtScale(Point other, double scalingFactor = 1)
     {
@@ -36,7 +36,7 @@ public class Town
 
     public void Draw(DrawingContext drawingContext)
     {
-        var point = this.Point;
+        var point = Point;
         var brush = Brushes.Red;
         var pen = new Pen(Brushes.Black, 2);
         drawingContext.DrawEllipse(brush, pen, point, Radius, Radius);

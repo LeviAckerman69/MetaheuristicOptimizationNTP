@@ -1,8 +1,7 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using MetaheuristicOptimizationNTP.Structures;
+using CommunityToolkit.Mvvm.ComponentModel;
 using MetaheuristicOptimizationNTP.ViewModel;
 
 namespace MetaheuristicOptimizationNTP.Components;
@@ -14,10 +13,11 @@ public class TownDisplay : FrameworkElement
         Loaded += (s, e) =>
         {
             ViewModel.Towns.CollectionChanged += (s, e) => InvalidateVisual();
+            (ViewModel as ObservableObject)?.PropertyChanged += (s, e) => InvalidateVisual();
         };
     }
 
-    private static MockViewModel MockViewModel { get; } = new MockViewModel();
+    private static MockViewModel MockViewModel { get; } = new();
 
     private IViewModel ViewModel => DataContext as IViewModel ?? MockViewModel;
 
@@ -26,14 +26,17 @@ public class TownDisplay : FrameworkElement
         base.OnRender(drawingContext);
         drawingContext.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
 
-        var towns = ViewModel.Towns;
+        DrawPaths(drawingContext);
 
-        foreach (var town in towns)
-        {
-            town.Draw(drawingContext);
-        }
+        DrawTowns(drawingContext);
+        
+    }
 
+    private void DrawPaths(DrawingContext drawingContext)
+    {
         var selectedSolution = ViewModel.SelectedSolution;
+
+        var towns = ViewModel.Towns;
 
         if (selectedSolution is not null)
         {
@@ -54,15 +57,23 @@ public class TownDisplay : FrameworkElement
         }
     }
 
+    private void DrawTowns(DrawingContext drawingContext)
+    {
+        var towns = ViewModel.Towns;
+
+        foreach (var town in towns)
+        {
+            town.Draw(drawingContext);
+        }
+    }
+
     protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
     {
         base.OnMouseLeftButtonDown(e);
         var position = e.GetPosition(this);
         ViewModel.AddNewTownAtPosition(position);
-        
     }
 
-    
 
     protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
     {
@@ -70,6 +81,4 @@ public class TownDisplay : FrameworkElement
         var position = e.GetPosition(this);
         ViewModel.RemoveTownAtPosition(position);
     }
-
-    
 }
