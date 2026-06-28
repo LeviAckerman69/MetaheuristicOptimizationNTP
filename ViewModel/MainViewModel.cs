@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -8,19 +9,34 @@ using MetaheuristicOptimizationNTP.Structures;
 
 namespace MetaheuristicOptimizationNTP.ViewModel;
 
-public partial class MainViewModel : ObservableObject, IViewModel
+public partial class MainViewModel : ObservableValidator, IViewModel
 {
     private static Random Random { get; } = new();
-    public int PopulationSize { get; set; } = 100;
+    [ObservableProperty]
+    [Range(5, int.MaxValue, ErrorMessage = "Enter population size >= 5.")]
+    public partial int PopulationSize { get; set; } = 100;
     public ObservableCollection<Town> Towns { get; } = new();
     public Population Population { get; set; } = new();
 
-    [ObservableProperty] 
+    [ObservableProperty]
     public partial Solution? SelectedSolution { get; set; } = null;
 
     [RelayCommand]
     public void CreatePopulation()
     {
+        ValidateAllProperties();
+
+        if (HasErrors)
+        {
+            var errors = GetErrors(nameof(PopulationSize));
+            foreach (var error in errors)
+            {
+                MessageBox.Show(error.ErrorMessage);
+            }
+
+            return;
+        }
+
         Population.Populate(Towns, PopulationSize);
         SelectedSolution = Population.Solutions.FirstOrDefault();
     }
@@ -91,8 +107,8 @@ public partial class MainViewModel : ObservableObject, IViewModel
         }
 
         var sortedSolutions = solutionList.Concat(Population.Solutions).OrderBy(solution => solution.Fitness).Take(PopulationSize).ToList();
-        
-        
+
+
         Population.Solutions.Clear();
 
         foreach (var solution in sortedSolutions)
