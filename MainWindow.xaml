@@ -44,25 +44,35 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
+            <Button
+                Grid.Row ="0"
+                Grid.Column ="0"
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Command="{Binding OpenConfigurationDialogCommand}"
+                Content="Configure..."
+                />
+
             <Label
-                Grid.Row="0"
+                Grid.Row="1"
                 Grid.Column="0"
                 HorizontalAlignment="Right"
                 Content="Size:" />
 
             <TextBox
-                Grid.Row="0"
+                Grid.Row="1"
                 Grid.Column="1"
                 VerticalAlignment="Center"
                 Text="{Binding PopulationSize}" />
 
             <Button
-                x:Name="ButtonCreatePopulation"
-                Grid.Row="1"
+                Grid.Row="2"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 HorizontalAlignment="Center"
@@ -71,11 +81,11 @@
                 Content="Create population" />
 
             <ListBox
-                Grid.Row="2"
+                Grid.Row="3"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 ItemsSource="{Binding Population.Solutions}"
-                SelectedItem="{Binding SelectedSolution, Mode=TwoWay}"
+                SelectedItem="{Binding SelectedSolution}"
                 SelectionMode="Single">
 
                 <ListBox.ItemTemplate>
@@ -86,13 +96,13 @@
             </ListBox>
 
             <Button
-                Grid.Row="3"
+                Grid.Row="4"
                 Grid.Column="0"
                 Command="{Binding StepEvolutionCommand }"
                 Content="Step" />
 
             <Button
-                Grid.Row="3"
+                Grid.Row="4"
                 Grid.Column="1"
                 Command="{Binding EvolveCommand}"
                 Content="{Binding EvolveText}" />

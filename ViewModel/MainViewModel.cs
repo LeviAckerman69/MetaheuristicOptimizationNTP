@@ -5,6 +5,7 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MetaheuristicOptimizationNTP.Structures;
+using MetaheuristicOptimizationNTP.View;
 
 
 namespace MetaheuristicOptimizationNTP.ViewModel;
@@ -20,6 +21,20 @@ public partial class MainViewModel : ObservableValidator, IViewModel
 
     [ObservableProperty]
     public partial Solution? SelectedSolution { get; set; } = null;
+
+    public ConfigurationDialogViewModel ConfigurationDialogViewModel { get; }
+
+    public MainViewModel()
+    {
+        ConfigurationDialogViewModel = new ConfigurationDialogViewModel();
+    }
+
+    [RelayCommand]
+    public void OpenConfigurationDialog()
+    {
+        var dialog = new ConfigurationDialog(ConfigurationDialogViewModel);
+        dialog.ShowDialog();
+    }
 
     [RelayCommand]
     public void CreatePopulation()
