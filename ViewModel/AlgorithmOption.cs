@@ -21,12 +21,12 @@ namespace MetaheuristicOptimizationNTP.ViewModel
         [Range(0.0d, 1.0d, ErrorMessage = "Set probability between 0.0 and 1.0.")]
         public partial double Probability { get; set; } = 0.0d;
 
-        public TOperation SolutionFunc { get; }
+        public TOperation Operation { get; }
 
-        public AlgorithmOption(string name, TOperation solutionFunc)
+        public AlgorithmOption(string name, TOperation operation)
         {
             Name = name;
-            SolutionFunc = solutionFunc;
+            Operation = operation;
         }
 
     }

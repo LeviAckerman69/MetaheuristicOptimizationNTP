@@ -13,14 +13,15 @@ namespace MetaheuristicOptimizationNTP.ViewModel;
 public partial class MainViewModel : ObservableValidator, IViewModel
 {
     private static Random Random { get; } = new();
+
     [ObservableProperty]
     [Range(5, int.MaxValue, ErrorMessage = "Enter population size >= 5.")]
     public partial int PopulationSize { get; set; } = 100;
+
     public ObservableCollection<Town> Towns { get; } = new();
     public Population Population { get; set; } = new();
 
-    [ObservableProperty]
-    public partial Solution? SelectedSolution { get; set; } = null;
+    [ObservableProperty] public partial Solution? SelectedSolution { get; set; } = null;
 
     public ConfigurationDialogViewModel ConfigurationDialogViewModel { get; }
 
@@ -95,33 +96,19 @@ public partial class MainViewModel : ObservableValidator, IViewModel
 
         foreach (var solution in Population.Solutions)
         {
-            var mutationId = Random.Next(4);
-            Solution mutation = null;
+            var mutationOperation = ConfigurationDialogViewModel.PickRandomMutationOperation();
 
-            switch (mutationId)
-            {
-                case 0:
-                    mutation = solution.SwapMutation();
-                    mutation.Evaluate(Towns);
-                    break;
-                case 1:
-                    mutation = solution.InsertMutation();
-                    mutation.Evaluate(Towns);
-                    break;
-                case 2:
-                    mutation = solution.InversionMutation();
-                    mutation.Evaluate(Towns);
-                    break;
-                case 3:
-                    mutation = solution.ScrambleMutation();
-                    mutation.Evaluate(Towns);
-                    break;
-            }
+            var mutation = mutationOperation.Invoke(solution);
+
+            mutation.Evaluate(Towns);
 
             solutionList.Add(mutation);
         }
 
-        var sortedSolutions = solutionList.Concat(Population.Solutions).OrderBy(solution => solution.Fitness).Take(PopulationSize).ToList();
+        var sortedSolutions = solutionList
+            .Concat(Population.Solutions)
+            .OrderBy(solution => solution.Fitness)
+            .Take(PopulationSize).ToList();
 
 
         Population.Solutions.Clear();
@@ -133,5 +120,4 @@ public partial class MainViewModel : ObservableValidator, IViewModel
 
         SelectedSolution = Population.Solutions.FirstOrDefault();
     }
-
 }

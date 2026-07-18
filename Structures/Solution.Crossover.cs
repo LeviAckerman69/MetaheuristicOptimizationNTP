@@ -53,7 +53,37 @@ namespace MetaheuristicOptimizationNTP.Structures
             }
 
             return new Solution(permutationCrossover);
+        }
 
+        public Solution CycleCrossover(Solution other)
+        {
+            var permutationA = PermutationView.ToList();
+            var permutationB = other.PermutationView.ToList();
+            var count = permutationA.Count;
+
+            var permutationCrossover = Enumerable.Repeat(-1, count).ToList();
+
+            var selectedIndex = Random.Shared.Next(count);
+
+            while (permutationCrossover[selectedIndex] == -1)
+            {
+                var valueA = permutationA[selectedIndex];
+                var valueB = permutationB[selectedIndex];
+
+                permutationCrossover[selectedIndex] = valueA;
+
+                selectedIndex = permutationA.IndexOf(valueB);
+            }
+                
+            for (var i = 0; i < count; i++)
+            {
+                if (permutationCrossover[i] == -1)
+                {
+                    permutationCrossover[i] = permutationB[i];
+                }
+            }
+
+            return new Solution(permutationCrossover);
         }
     }
 }
