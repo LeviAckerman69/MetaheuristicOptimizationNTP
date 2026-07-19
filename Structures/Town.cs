@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Windows;
 using System.Windows.Media;
 using Brushes = System.Windows.Media.Brushes;
 using Pen = System.Windows.Media.Pen;
@@ -8,10 +9,17 @@ namespace MetaheuristicOptimizationNTP.Structures;
 public class Town
 {
     public const double Radius = 15;
-    public double X { get; init; }
-    public double Y { get; init; }
-    public required string Name { get; init; }
 
+    public Guid Id { get; set; }
+
+    [MinLength(1)]
+    [MaxLength(100)]
+    public required string Name { get; set; }
+
+    public double X { get; set; }
+
+    public double Y { get; set; }
+    
     public Point Point => new(X, Y);
 
     public bool ContainsAtScale(Point other, double scalingFactor = 1)

@@ -3,21 +3,30 @@ using System.ComponentModel.DataAnnotations;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MetaheuristicOptimizationNTP.Database;
 using MetaheuristicOptimizationNTP.Structures;
 using MetaheuristicOptimizationNTP.View;
+using Microsoft.EntityFrameworkCore;
 
 namespace MetaheuristicOptimizationNTP.ViewModel;
 
 public partial class MainViewModel : ObservableValidator, IViewModel
 {
-    private static Random Random { get; } = new();
-
-    public ConfigurationDialogViewModel ConfigurationDialogViewModel { get; }
-
     public MainViewModel()
     {
-        ConfigurationDialogViewModel = new ConfigurationDialogViewModel();
+        DbContext.Database.EnsureCreated();
+
+        var towns = DbContext.Towns;
+
+        foreach (var town in towns)
+        {
+            Towns.Add(town);
+        }
     }
+
+    public TspDbContext DbContext { get; } = new();
+
+    public ConfigurationDialogViewModel ConfigurationDialogViewModel { get; } = new();
 
     [ObservableProperty]
     [Range(5, int.MaxValue, ErrorMessage = "Enter population size >= 5.")]
@@ -56,6 +65,9 @@ public partial class MainViewModel : ObservableValidator, IViewModel
             var id = Towns.Count + 1;
             var town = new Town { X = position.X, Y = position.Y, Name = $"Town {id}" };
             Towns.Add(town);
+
+            DbContext.Towns.Add(town);
+            DbContext.SaveChanges();
         }
     }
 
