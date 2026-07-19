@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
+using MetaheuristicOptimizationNTP.Structures;
 using MetaheuristicOptimizationNTP.ViewModel;
 
 namespace MetaheuristicOptimizationNTP.Components;
@@ -62,7 +63,10 @@ public class TownDisplay : FrameworkElement
 
         foreach (var town in towns)
         {
-            town.Draw(drawingContext);
+            var point = town.Point;
+            var brush = Brushes.Red;
+            var pen = new Pen(Brushes.Black, 2);
+            drawingContext.DrawEllipse(brush, pen, point, Town.Radius, Town.Radius);
         }
     }
 

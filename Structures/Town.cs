@@ -7,7 +7,7 @@ namespace MetaheuristicOptimizationNTP.Structures;
 
 public class Town
 {
-    private const double Radius = 15;
+    public const double Radius = 15;
     public double X { get; init; }
     public double Y { get; init; }
     public required string Name { get; init; }
@@ -32,13 +32,5 @@ public class Town
     public bool Contains(Point other)
     {
         return ContainsAtScale(other);
-    }
-
-    public void Draw(DrawingContext drawingContext)
-    {
-        var point = Point;
-        var brush = Brushes.Red;
-        var pen = new Pen(Brushes.Black, 2);
-        drawingContext.DrawEllipse(brush, pen, point, Radius, Radius);
     }
 }
