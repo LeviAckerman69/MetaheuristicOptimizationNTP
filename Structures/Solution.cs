@@ -10,6 +10,14 @@ public partial class Solution
 
     public string SolutionDescription => $"Solution {Id}: Fitness = {Fitness:F7}";
 
+    public int Id { get; }
+
+    private List<int> Permutation { get; }
+
+    public IReadOnlyList<int> PermutationView => Permutation.AsReadOnly();
+
+    public double Fitness { get; private set; }
+
     private Solution()
     {
         SolutionCounter++;
@@ -30,14 +38,6 @@ public partial class Solution
     {
         Permutation = new List<int>(currentPermutation);
     }
-
-    public int Id { get; private set; }
-
-    private List<int> Permutation { get; }
-
-    public IReadOnlyList<int> PermutationView => Permutation.AsReadOnly();
-
-    public double Fitness { get; private set; }
 
     public void Evaluate(ObservableCollection<Town> townsList)
     {

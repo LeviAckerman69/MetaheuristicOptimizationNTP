@@ -1,27 +1,16 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Windows;
-using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MetaheuristicOptimizationNTP.Structures;
 using MetaheuristicOptimizationNTP.View;
-
 
 namespace MetaheuristicOptimizationNTP.ViewModel;
 
 public partial class MainViewModel : ObservableValidator, IViewModel
 {
     private static Random Random { get; } = new();
-
-    [ObservableProperty]
-    [Range(5, int.MaxValue, ErrorMessage = "Enter population size >= 5.")]
-    public partial int PopulationSize { get; set; } = 100;
-
-    public ObservableCollection<Town> Towns { get; } = new();
-    public Population Population { get; set; } = new();
-
-    [ObservableProperty] public partial Solution? SelectedSolution { get; set; } = null;
 
     public ConfigurationDialogViewModel ConfigurationDialogViewModel { get; }
 
@@ -30,12 +19,15 @@ public partial class MainViewModel : ObservableValidator, IViewModel
         ConfigurationDialogViewModel = new ConfigurationDialogViewModel();
     }
 
-    [RelayCommand]
-    public void OpenConfigurationDialog()
-    {
-        var dialog = new ConfigurationDialog(ConfigurationDialogViewModel);
-        dialog.ShowDialog();
-    }
+    [ObservableProperty]
+    [Range(5, int.MaxValue, ErrorMessage = "Enter population size >= 5.")]
+    public partial int PopulationSize { get; set; } = 100;
+
+    public ObservableCollection<Town> Towns { get; } = new();
+    public Population Population { get; set; } = new();
+
+    [ObservableProperty]
+    public partial Solution? SelectedSolution { get; set; } = null;
 
     [RelayCommand]
     public void CreatePopulation()
@@ -76,6 +68,24 @@ public partial class MainViewModel : ObservableValidator, IViewModel
         }
     }
 
+    [RelayCommand]
+    public void OpenConfigurationDialog()
+    {
+        var configurationDialogViewModelCopy = new ConfigurationDialogViewModel();
+        configurationDialogViewModelCopy.Fill(ConfigurationDialogViewModel);
+
+        var dialog = new ConfigurationDialog(configurationDialogViewModelCopy)
+        {
+            Owner = Application.Current.MainWindow
+        };
+        dialog.ShowDialog();
+
+        if (dialog.DialogResult == true)
+        {
+            ConfigurationDialogViewModel.Fill(configurationDialogViewModelCopy);
+        }
+    }
+
     private Town? FindTownAtPosition(Point position, double scalingFactor = 1)
     {
         foreach (var town in Towns.Reverse())
@@ -92,15 +102,16 @@ public partial class MainViewModel : ObservableValidator, IViewModel
     [RelayCommand]
     public void StepEvolution()
     {
-        var solutionIndex = Random.Shared.Next(Population.Count);
-        var parentA = Population.Solutions[solutionIndex];
-        var parentB = Population.Solutions[solutionIndex];
+        var indexA = Random.Shared.Next(Population.Count);
+        var indexB = Random.Shared.Next(Population.Count);
 
-        do
+        while (indexA == indexB)
         {
-            solutionIndex = Random.Shared.Next(Population.Count);
-            parentB = Population.Solutions[solutionIndex];
-        } while (ReferenceEquals(parentA, parentB));
+            indexB = Random.Shared.Next(Population.Count);
+        }
+
+        var parentA = Population.Solutions[indexA];
+        var parentB = Population.Solutions[indexB];
 
         var crossoverOperation = ConfigurationDialogViewModel.PickRandomCrossoverOperation();
         var child = crossoverOperation(parentA, parentB);
@@ -110,25 +121,9 @@ public partial class MainViewModel : ObservableValidator, IViewModel
 
         mutatedChild.Evaluate(Towns);
 
-        Population.Solutions.Add(mutatedChild);
+        var solutionIndex = Population.Solutions.TakeWhile(solution => solution.Fitness < mutatedChild.Fitness).Count();
+        Population.Solutions.Insert(solutionIndex, mutatedChild);
 
-        var worstSolution = Population.Solutions.MaxBy(solution => solution.Fitness)!;
-        Population.Solutions.Remove(worstSolution);
-
-        var previouslySelected = SelectedSolution;
-
-        if (previouslySelected == worstSolution)
-        {
-            previouslySelected = null;
-        }
-
-        var sorted = Population.Solutions.OrderBy(solution => solution.Fitness).ToList();
-        Population.Solutions.Clear();
-        foreach (var solution in sorted)
-        {
-            Population.Solutions.Add(solution);
-        }
-
-        SelectedSolution = previouslySelected;
+        Population.Solutions.RemoveAt(Population.Solutions.Count - 1);
     }
 }

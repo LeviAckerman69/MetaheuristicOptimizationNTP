@@ -1,34 +1,48 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.ComponentModel.DataAnnotations;
+using CommunityToolkit.Mvvm.ComponentModel;
 using MetaheuristicOptimizationNTP.Structures;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
 
-namespace MetaheuristicOptimizationNTP.ViewModel
+namespace MetaheuristicOptimizationNTP.ViewModel;
+
+public delegate Solution MutationOperation(Solution solution);
+
+public delegate Solution CrossoverOperation(Solution solution1, Solution solution2);
+
+public partial class AlgorithmOption<TOperation> : ObservableValidator
 {
-    public delegate Solution MutationOperation(Solution solution);
-    public delegate Solution CrossoverOperation(Solution solution1, Solution solution2);
+    public string Name { get; }
 
-    public partial class AlgorithmOption<TOperation> : ObservableValidator
+    [ObservableProperty]
+    public partial bool IsSelected { get; set; } = true;
+
+    [ObservableProperty]
+    [Range(0.0d, 1.0d, ErrorMessage = "Set probability between 0.0 and 1.0.")]
+    public partial double Probability { get; set; } = 0.0d;
+
+    public TOperation Operation { get; }
+
+    public AlgorithmOption(string name, TOperation operation)
     {
-        public string Name { get; }
+        Name = name;
+        Operation = operation;
+    }
 
-        [ObservableProperty]
-        public partial bool IsSelected {get; set;}
+    public AlgorithmOption(AlgorithmOption<TOperation> algorithmOption)
+    {
+        Name = algorithmOption.Name;
+        IsSelected = algorithmOption.IsSelected;
+        Probability = algorithmOption.Probability;
+        Operation = algorithmOption.Operation;
+    }
 
-        [ObservableProperty]
-        [Range(0.0d, 1.0d, ErrorMessage = "Set probability between 0.0 and 1.0.")]
-        public partial double Probability { get; set; } = 0.0d;
-
-        public TOperation Operation { get; }
-
-        public AlgorithmOption(string name, TOperation operation)
+    public void Fill(AlgorithmOption<TOperation> sourceOption)
+    {
+        if (Name != sourceOption.Name)
         {
-            Name = name;
-            Operation = operation;
+            throw new ArgumentException("Option names do not match.");
         }
 
+        IsSelected = sourceOption.IsSelected;
+        Probability = sourceOption.Probability;
     }
 }
-    

@@ -8,6 +8,10 @@ namespace MetaheuristicOptimizationNTP.Components;
 
 public class TownDisplay : FrameworkElement
 {
+    private static MockViewModel MockViewModel { get; } = new();
+
+    private IViewModel ViewModel => DataContext as IViewModel ?? MockViewModel;
+
     public TownDisplay()
     {
         Loaded += (s, e) =>
@@ -17,10 +21,6 @@ public class TownDisplay : FrameworkElement
         };
     }
 
-    private static MockViewModel MockViewModel { get; } = new();
-
-    private IViewModel ViewModel => DataContext as IViewModel ?? MockViewModel;
-
     protected override void OnRender(DrawingContext drawingContext)
     {
         base.OnRender(drawingContext);
@@ -29,7 +29,6 @@ public class TownDisplay : FrameworkElement
         DrawPaths(drawingContext);
 
         DrawTowns(drawingContext);
-        
     }
 
     private void DrawPaths(DrawingContext drawingContext)
