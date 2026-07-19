@@ -92,32 +92,43 @@ public partial class MainViewModel : ObservableValidator, IViewModel
     [RelayCommand]
     public void StepEvolution()
     {
-        var solutionList = new List<Solution>();
+        var solutionIndex = Random.Shared.Next(Population.Count);
+        var parentA = Population.Solutions[solutionIndex];
+        var parentB = Population.Solutions[solutionIndex];
 
-        foreach (var solution in Population.Solutions)
+        do
         {
-            var mutationOperation = ConfigurationDialogViewModel.PickRandomMutationOperation();
+            solutionIndex = Random.Shared.Next(Population.Count);
+            parentB = Population.Solutions[solutionIndex];
+        } while (ReferenceEquals(parentA, parentB));
 
-            var mutation = mutationOperation.Invoke(solution);
+        var crossoverOperation = ConfigurationDialogViewModel.PickRandomCrossoverOperation();
+        var child = crossoverOperation(parentA, parentB);
 
-            mutation.Evaluate(Towns);
+        var mutationOperation = ConfigurationDialogViewModel.PickRandomMutationOperation();
+        var mutatedChild = mutationOperation(child);
 
-            solutionList.Add(mutation);
+        mutatedChild.Evaluate(Towns);
+
+        Population.Solutions.Add(mutatedChild);
+
+        var worstSolution = Population.Solutions.MaxBy(solution => solution.Fitness)!;
+        Population.Solutions.Remove(worstSolution);
+
+        var previouslySelected = SelectedSolution;
+
+        if (previouslySelected == worstSolution)
+        {
+            previouslySelected = null;
         }
 
-        var sortedSolutions = solutionList
-            .Concat(Population.Solutions)
-            .OrderBy(solution => solution.Fitness)
-            .Take(PopulationSize).ToList();
-
-
+        var sorted = Population.Solutions.OrderBy(solution => solution.Fitness).ToList();
         Population.Solutions.Clear();
-
-        foreach (var solution in sortedSolutions)
+        foreach (var solution in sorted)
         {
             Population.Solutions.Add(solution);
         }
 
-        SelectedSolution = Population.Solutions.FirstOrDefault();
+        SelectedSolution = previouslySelected;
     }
 }
