@@ -4,6 +4,7 @@ using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MetaheuristicOptimizationNTP.Database;
+using MetaheuristicOptimizationNTP.Helper;
 using MetaheuristicOptimizationNTP.Structures;
 using MetaheuristicOptimizationNTP.View;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ public partial class MainViewModel : ObservableValidator, IViewModel
 {
     public MainViewModel()
     {
+        DbContext.Database.EnsureDeleted();
         DbContext.Database.EnsureCreated();
 
         var towns = DbContext.Towns;
@@ -77,6 +79,8 @@ public partial class MainViewModel : ObservableValidator, IViewModel
         if (town is not null)
         {
             Towns.Remove(town);
+            DbContext.Towns.Remove(town); 
+            DbContext.SaveChanges();
         }
     }
 
@@ -114,16 +118,8 @@ public partial class MainViewModel : ObservableValidator, IViewModel
     [RelayCommand]
     public void StepEvolution()
     {
-        var indexA = Random.Shared.Next(Population.Count);
-        var indexB = Random.Shared.Next(Population.Count);
-
-        while (indexA == indexB)
-        {
-            indexB = Random.Shared.Next(Population.Count);
-        }
-
-        var parentA = Population.Solutions[indexA];
-        var parentB = Population.Solutions[indexB];
+        var parentA = ParentSelectionHelper.TournamentSelection(Population, 5);
+        var parentB = ParentSelectionHelper.TournamentSelection(Population, 5, parentA);
 
         var crossoverOperation = ConfigurationDialogViewModel.PickRandomCrossoverOperation();
         var child = crossoverOperation(parentA, parentB);

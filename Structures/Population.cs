@@ -1,8 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace MetaheuristicOptimizationNTP.Structures;
 
-public class Population
+public class Population : ObservableObject
 {
     public ObservableCollection<Solution> Solutions { get; set; } = new();
 
@@ -10,6 +11,12 @@ public class Population
 
     public int Count => Solutions.Count;
 
+    public bool IsPresent => Solutions.Count > 0;
+
+    public Population()
+    {
+        Solutions.CollectionChanged += (sender, args) => OnPropertyChanged(nameof(IsPresent));
+    }
 
     public void Populate(ObservableCollection<Town> townsList, int popSize = 100)
     {

@@ -97,12 +97,14 @@
             <Button
                 Grid.Row="4"
                 Grid.Column="0"
+                IsEnabled="{Binding Population.IsPresent}"
                 Command="{Binding StepEvolutionCommand }"
                 Content="Step" />
 
             <Button
                 Grid.Row="4"
                 Grid.Column="1"
+                IsEnabled="{Binding Population.IsPresent}"
                 Command="{Binding EvolveCommand}"
                 Content="{Binding EvolveText}" />
         </Grid>
