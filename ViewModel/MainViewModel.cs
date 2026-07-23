@@ -1,13 +1,12 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.Windows;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MetaheuristicOptimizationNTP.Database;
 using MetaheuristicOptimizationNTP.Helper;
 using MetaheuristicOptimizationNTP.Structures;
 using MetaheuristicOptimizationNTP.View;
-using Microsoft.EntityFrameworkCore;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+using System.Windows;
 
 namespace MetaheuristicOptimizationNTP.ViewModel;
 
@@ -15,9 +14,6 @@ public partial class MainViewModel : ObservableValidator, IViewModel
 {
     public MainViewModel()
     {
-        DbContext.Database.EnsureDeleted();
-        DbContext.Database.EnsureCreated();
-
         var towns = DbContext.Towns;
 
         foreach (var town in towns)
@@ -79,7 +75,7 @@ public partial class MainViewModel : ObservableValidator, IViewModel
         if (town is not null)
         {
             Towns.Remove(town);
-            DbContext.Towns.Remove(town); 
+            DbContext.Towns.Remove(town);
             DbContext.SaveChanges();
         }
     }

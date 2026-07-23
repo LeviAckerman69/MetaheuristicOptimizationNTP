@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using MetaheuristicOptimizationNTP.ViewModel;
+﻿using MetaheuristicOptimizationNTP.ViewModel;
+using System.Windows;
 
 namespace MetaheuristicOptimizationNTP.View;
 
