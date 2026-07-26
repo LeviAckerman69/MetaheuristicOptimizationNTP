@@ -3,9 +3,9 @@ using MetaheuristicOptimizationNTP.ViewModel;
 
 namespace MetaheuristicOptimizationNTP.View;
 
-public partial class LoginView : Window
+public partial class RegisterView : Window
 {
-    public LoginView(LoginViewModel viewModel)
+    public RegisterView(LoginViewModel viewModel)
     {
         InitializeComponent();
         DataContext = viewModel;

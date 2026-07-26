@@ -2,40 +2,56 @@
 using MetaheuristicOptimizationNTP.Structures;
 using Microsoft.AspNetCore.Identity;
 
-namespace MetaheuristicOptimizationNTP.Services
+namespace MetaheuristicOptimizationNTP.Services;
+
+public class AuthenticationService
 {
-    public class AuthenticationService
+    private static TspDbContext DbContext { get; } = new();
+
+    private PasswordHasher<User> PasswordHasher { get; } = new();
+
+    public User? Authenticate(string username, string password)
     {
-        private PasswordHasher<User> PasswordHasher { get; set; } = new();
+        username = username.ToLower();
 
-        public User? CurrentUser { get; private set; } = null;
+        var user = DbContext.Users.FirstOrDefault(user => user.Name == username);
 
-        public bool Login(string username, string password)
+        if (user == null)
         {
-            var dbContext = new TspDbContext();
-            var user = dbContext.Users.FirstOrDefault(u => u.Name == username);
-
-            if (user == null)
-            {
-                return false;
-            }
-
-            var passwordHash = PasswordHasher.HashPassword(user, password);
-
-            if (user.PasswordHash != passwordHash)
-            {
-                return false;
-            }
-
-            CurrentUser = user;
-
-            return true;
+            return null;
         }
 
-        public void Logout()
+        var passwordHash = PasswordHasher.HashPassword(user, password);
+
+        if (user.PasswordHash != passwordHash)
         {
-            CurrentUser = null;
+            return null;
         }
 
+        return user;
+    }
+
+    public bool Register(string username, string password)
+    {
+        username = username.ToLower();
+
+        var user = DbContext.Users.FirstOrDefault(user => user.Name == username);
+
+        if (user != null)
+        {
+            return false;
+        }
+
+        user = new User
+        {
+            Name = username
+        };
+
+        user.PasswordHash = PasswordHasher.HashPassword(user, password);
+
+        DbContext.Users.Add(user);
+        DbContext.SaveChanges();
+
+        return true;
     }
 }

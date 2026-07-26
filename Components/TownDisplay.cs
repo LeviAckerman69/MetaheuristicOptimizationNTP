@@ -1,9 +1,9 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using MetaheuristicOptimizationNTP.Structures;
-using MetaheuristicOptimizationNTP.ViewModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using CommunityToolkit.Mvvm.ComponentModel;
+using MetaheuristicOptimizationNTP.Structures;
+using MetaheuristicOptimizationNTP.ViewModel;
 
 namespace MetaheuristicOptimizationNTP.Components;
 

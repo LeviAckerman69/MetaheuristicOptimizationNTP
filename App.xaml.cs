@@ -1,7 +1,8 @@
-﻿using MetaheuristicOptimizationNTP.Database;
+﻿using System.Windows;
+using MetaheuristicOptimizationNTP.Database;
 using MetaheuristicOptimizationNTP.Structures;
 using Microsoft.AspNetCore.Identity;
-using System.Windows;
+using Microsoft.EntityFrameworkCore;
 
 namespace MetaheuristicOptimizationNTP;
 
@@ -18,11 +19,13 @@ public partial class App : Application
         //dbContext.Database.EnsureDeleted();
         //dbContext.Database.EnsureCreated();
 
+        dbContext.Users.ExecuteDelete();
+
         if (!dbContext.Users.Any())
         {
             var user = new User
             {
-                Name = "Admin"
+                Name = "admin"
             };
 
             const string password = "ADMIN123!";

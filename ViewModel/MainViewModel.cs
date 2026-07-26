@@ -1,17 +1,36 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
+using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MetaheuristicOptimizationNTP.Database;
 using MetaheuristicOptimizationNTP.Helper;
 using MetaheuristicOptimizationNTP.Structures;
 using MetaheuristicOptimizationNTP.View;
-using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using System.Windows;
 
 namespace MetaheuristicOptimizationNTP.ViewModel;
 
 public partial class MainViewModel : ObservableValidator, IViewModel
 {
+    public TspDbContext DbContext { get; } = new();
+
+    public ConfigurationDialogViewModel ConfigurationDialogViewModel { get; } = new();
+
+    [NotifyPropertyChangedFor(nameof(IsLoggedIn))]
+    [NotifyPropertyChangedFor(nameof(FormatCurrentUser))]
+    [NotifyPropertyChangedFor(nameof(LoginText))]
+    [ObservableProperty]
+    public partial User? CurrentUser { get; set; } = null;
+
+    public string FormatCurrentUser => CurrentUser is not null
+        ? $"Current User: {CurrentUser.Name}"
+        : "No user logged in.";
+
+
+    public bool IsLoggedIn => CurrentUser != null;
+
+    public string LoginText => IsLoggedIn ? "_Switch User..." : "_Login...";
+
     public MainViewModel()
     {
         var towns = DbContext.Towns;
@@ -21,10 +40,6 @@ public partial class MainViewModel : ObservableValidator, IViewModel
             Towns.Add(town);
         }
     }
-
-    public TspDbContext DbContext { get; } = new();
-
-    public ConfigurationDialogViewModel ConfigurationDialogViewModel { get; } = new();
 
     [ObservableProperty]
     [Range(5, int.MaxValue, ErrorMessage = "Enter population size >= 5.")]
@@ -129,5 +144,28 @@ public partial class MainViewModel : ObservableValidator, IViewModel
         Population.Solutions.Insert(solutionIndex, mutatedChild);
 
         Population.Solutions.RemoveAt(Population.Solutions.Count - 1);
+    }
+
+    [RelayCommand]
+    private void Login()
+    {
+        var loginViewModel = new LoginViewModel();
+        var loginView = new LoginView(loginViewModel)
+        {
+            Owner = Application.Current.MainWindow
+        };
+
+        loginView.ShowDialog();
+
+        if (loginView.DialogResult ?? false)
+        {
+            CurrentUser = loginViewModel.SelectedUser;
+        }
+    }
+
+    [RelayCommand]
+    private void Logout()
+    {
+        CurrentUser = null;
     }
 }

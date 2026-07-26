@@ -1,6 +1,6 @@
-﻿using MetaheuristicOptimizationNTP.Structures;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
+using MetaheuristicOptimizationNTP.Structures;
 
 namespace MetaheuristicOptimizationNTP.ViewModel;
 
