@@ -8,13 +8,11 @@ namespace MetaheuristicOptimizationNTP.ViewModel;
 
 public partial class LoginViewModel : DialogBaseViewModel
 {
-    private AuthenticationService AuthenticationService { get; } = new();
+    [ObservableProperty]
+    public partial string Username { get; set; } = string.Empty;
 
     [ObservableProperty]
-    public partial string Username { get; set; }
-
-    [ObservableProperty]
-    public partial string Password { get; set; }
+    public partial string Password { get; set; } = string.Empty;
 
     public User? SelectedUser { get; private set; }
 
@@ -30,7 +28,7 @@ public partial class LoginViewModel : DialogBaseViewModel
         }
         else
         {
-            MessageBox.Show("Invalid username or password.");
+            MessageBox.Show("Invalid username or password.", "Login error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

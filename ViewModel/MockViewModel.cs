@@ -4,7 +4,7 @@ using MetaheuristicOptimizationNTP.Structures;
 
 namespace MetaheuristicOptimizationNTP.ViewModel;
 
-public class MockViewModel : IViewModel
+public class MockViewModel : MainViewModel
 {
     public int PopulationSize { get; set; } = 0;
     public ObservableCollection<Town> Towns { get; } = new();

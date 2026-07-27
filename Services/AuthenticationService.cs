@@ -1,16 +1,23 @@
-﻿using MetaheuristicOptimizationNTP.Database;
+﻿using System.Security.Cryptography;
+using System.Text;
+using MetaheuristicOptimizationNTP.Database;
 using MetaheuristicOptimizationNTP.Structures;
-using Microsoft.AspNetCore.Identity;
 
 namespace MetaheuristicOptimizationNTP.Services;
 
-public class AuthenticationService
+public static class AuthenticationService
 {
     private static TspDbContext DbContext { get; } = new();
 
-    private PasswordHasher<User> PasswordHasher { get; } = new();
+    private static string HashPassword(string password)
+    {
+        var bytes = Encoding.UTF8.GetBytes(password);
+        var hash = SHA256.HashData(bytes);
 
-    public User? Authenticate(string username, string password)
+        return Convert.ToHexString(hash).ToLowerInvariant();
+    }
+
+    public static User? Authenticate(string username, string password)
     {
         username = username.ToLower();
 
@@ -21,7 +28,7 @@ public class AuthenticationService
             return null;
         }
 
-        var passwordHash = PasswordHasher.HashPassword(user, password);
+        var passwordHash = HashPassword(password);
 
         if (user.PasswordHash != passwordHash)
         {
@@ -31,23 +38,20 @@ public class AuthenticationService
         return user;
     }
 
-    public bool Register(string username, string password)
+    public static bool Register(string username, string password)
     {
         username = username.ToLower();
 
-        var user = DbContext.Users.FirstOrDefault(user => user.Name == username);
-
-        if (user != null)
+        if (DbContext.Users.Any(user => user.Name == username))
         {
             return false;
         }
 
-        user = new User
+        var user = new User
         {
-            Name = username
+            Name = username,
+            PasswordHash = HashPassword(password)
         };
-
-        user.PasswordHash = PasswordHasher.HashPassword(user, password);
 
         DbContext.Users.Add(user);
         DbContext.SaveChanges();

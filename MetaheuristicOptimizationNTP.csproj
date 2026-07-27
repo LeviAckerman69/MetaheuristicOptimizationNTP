@@ -10,30 +10,30 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Sqlite\**" />
-	  <EmbeddedResource Remove="Sqlite\**" />
-	  <None Remove="Sqlite\**" />
-	  <Page Remove="Sqlite\**" />
+		<Compile Remove="Sqlite\**" />
+		<EmbeddedResource Remove="Sqlite\**" />
+		<None Remove="Sqlite\**" />
+		<Page Remove="Sqlite\**" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.10" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.10" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.10" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.10" />
-	  <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3" />
-	  <PackageReference Include="WPF-UI" Version="4.3.0" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.10" />
+		<PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3" />
+		<PackageReference Include="WPF-UI" Version="4.3.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="View\RegisterView.xaml.cs">
-	    <SubType>Code</SubType>
-	  </Compile>
+		<Compile Update="View\RegisterView.xaml.cs">
+			<SubType>Code</SubType>
+		</Compile>
 	</ItemGroup>
 
 </Project>

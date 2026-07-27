@@ -5,7 +5,7 @@ namespace MetaheuristicOptimizationNTP.View;
 
 public partial class RegisterView : Window
 {
-    public RegisterView(LoginViewModel viewModel)
+    public RegisterView(RegisterViewModel viewModel)
     {
         InitializeComponent();
         DataContext = viewModel;

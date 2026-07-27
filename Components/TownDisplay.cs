@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using CommunityToolkit.Mvvm.ComponentModel;
 using MetaheuristicOptimizationNTP.Structures;
 using MetaheuristicOptimizationNTP.ViewModel;
 
@@ -11,14 +10,14 @@ public class TownDisplay : FrameworkElement
 {
     private static MockViewModel MockViewModel { get; } = new();
 
-    private IViewModel ViewModel => DataContext as IViewModel ?? MockViewModel;
+    private MainViewModel ViewModel => DataContext as MainViewModel ?? MockViewModel;
 
     public TownDisplay()
     {
         Loaded += (s, e) =>
         {
             ViewModel.Towns.CollectionChanged += (s, e) => InvalidateVisual();
-            (ViewModel as ObservableObject)?.PropertyChanged += (s, e) => InvalidateVisual();
+            ViewModel?.PropertyChanged += (s, e) => InvalidateVisual();
         };
     }
 
