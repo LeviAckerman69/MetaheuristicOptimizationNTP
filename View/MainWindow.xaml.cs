@@ -1,7 +1,7 @@
-﻿using System.Windows;
-using MetaheuristicOptimizationNTP.ViewModel;
+﻿using MetaheuristicOptimizationNTP.ViewModel;
+using System.Windows;
 
-namespace MetaheuristicOptimizationNTP;
+namespace MetaheuristicOptimizationNTP.View;
 
 /// <summary>
 ///     Interaction logic for MainWindow.xaml

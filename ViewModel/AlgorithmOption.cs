@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using MetaheuristicOptimizationNTP.Structures;
+using System.ComponentModel.DataAnnotations;
 
 namespace MetaheuristicOptimizationNTP.ViewModel;
 

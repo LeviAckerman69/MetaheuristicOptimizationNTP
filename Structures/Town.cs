@@ -1,8 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Windows;
-using System.Windows.Media;
-using Brushes = System.Windows.Media.Brushes;
-using Pen = System.Windows.Media.Pen;
 
 namespace MetaheuristicOptimizationNTP.Structures;
 
@@ -19,7 +16,7 @@ public class Town
     public double X { get; set; }
 
     public double Y { get; set; }
-    
+
     public Point Point => new(X, Y);
 
     public bool ContainsAtScale(Point other, double scalingFactor = 1)

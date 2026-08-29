@@ -1,16 +1,14 @@
-﻿using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using MetaheuristicOptimizationNTP.Helper;
+﻿using MetaheuristicOptimizationNTP.Helper;
+using System.Collections.ObjectModel;
 
 namespace MetaheuristicOptimizationNTP.ViewModel;
 
-public partial class ConfigurationDialogViewModel : ObservableValidator
+public class ConfigurationDialogViewModel : DialogBaseViewModel
 {
     public ObservableCollection<AlgorithmOption<MutationOperation>> MutationOptions { get; } = new();
     public ObservableCollection<AlgorithmOption<CrossoverOperation>> CrossoverOptions { get; } = new();
 
-    public event Action<bool?>? CloseRequested;
+
 
     private IEnumerable<MutationOperation> SelectedMutations
     {
@@ -90,17 +88,5 @@ public partial class ConfigurationDialogViewModel : ObservableValidator
         CrossoverOptions.FillListOfOptions(sourceViewModel.CrossoverOptions);
     }
 
-    [RelayCommand]
-    public void Confirm()
-    {
-        CloseRequested?.Invoke(true);
-        CloseRequested = null;
-    }
 
-    [RelayCommand]
-    public void Cancel()
-    {
-        CloseRequested?.Invoke(false);
-        CloseRequested = null;
-    }
 }
