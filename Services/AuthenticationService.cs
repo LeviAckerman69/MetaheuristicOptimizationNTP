@@ -9,16 +9,23 @@ namespace MetaheuristicOptimizationNTP.Services
     {
         public static TspDbContext DbContext { get; } = new TspDbContext();
 
+        private const int PepperMax = 100000;
+
         private static string SaltUser(Guid userId)
         {
             var hash = SHA256.HashData(userId.ToByteArray());
             return Convert.ToHexString(hash).ToLowerInvariant();
         }
 
-        private static string HashPassword(string password, string salt)
+        private static int GeneratedPepper()
         {
-            var saltedPassword = $"{password}{salt}";
-            var hash = SHA256.HashData(Encoding.UTF8.GetBytes(saltedPassword));
+            return RandomNumberGenerator.GetInt32(0, PepperMax);
+        }
+
+        private static string HashPassword(string password, string salt, int pepper)
+        {
+            var passwordWithSaltAndPepper = $"{salt}{password}{pepper}";
+            var hash = SHA256.HashData(Encoding.UTF8.GetBytes(passwordWithSaltAndPepper));
             return Convert.ToHexString(hash).ToLowerInvariant();
         }
 
@@ -32,9 +39,19 @@ namespace MetaheuristicOptimizationNTP.Services
             }
 
             var salt = SaltUser(user.Id);
-            var passwordHash = HashPassword(password, salt);
+            var pepper = 0;
 
-            return passwordHash == user.PasswordHash ? user : null;
+            for (var i = 0; i < PepperMax; i++)
+            {
+                var passwordHash = HashPassword(password, salt, pepper);
+                if (passwordHash == user.PasswordHash)
+                {
+                    return user;
+                }
+                pepper++;
+            }
+
+            return null;
         }
 
         public static bool Register(string username, string password)
@@ -49,7 +66,8 @@ namespace MetaheuristicOptimizationNTP.Services
 
             var guid = Guid.NewGuid();
             var salt = SaltUser(guid);
-            var passwordHash = HashPassword(password, salt);
+            var pepper = GeneratedPepper();
+            var passwordHash = HashPassword(password, salt, pepper);
 
             var newUser = new User
             {
