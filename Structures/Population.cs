@@ -23,6 +23,7 @@ public class Population : ObservableObject
         TownsList = townsList;
 
         Solutions.Clear();
+        Solution.ResetCounter();
 
         var tempSolutions = new List<Solution>();
 

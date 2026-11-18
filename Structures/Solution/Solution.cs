@@ -6,6 +6,11 @@ public partial class Solution
 {
     private static int SolutionCounter { get; set; }
 
+    public static void ResetCounter()
+    {
+        SolutionCounter = 0;
+    }
+
     public string SolutionDescription => $"Solution {Id}: Fitness = {Fitness:F7}";
 
     public int Id { get; }

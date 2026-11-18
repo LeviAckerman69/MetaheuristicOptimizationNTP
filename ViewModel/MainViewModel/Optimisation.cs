@@ -18,6 +18,8 @@ public partial class MainViewModel
     [NotifyCanExecuteChangedFor(nameof(CreatePopulationCommand))]
     [NotifyCanExecuteChangedFor(nameof(StepEvolutionCommand))]
     [NotifyCanExecuteChangedFor(nameof(OpenConfigurationDialogCommand))]
+    [NotifyCanExecuteChangedFor(nameof(OpenTownManagementCommand))]
+    [NotifyCanExecuteChangedFor(nameof(ClearTownsCommand))]
     public partial bool IsEvolving { get; private set; }
 
     public string EvolveText => IsEvolving ? "Stop" : "Evolve";

@@ -25,4 +25,9 @@ public class MockViewModel : IViewModel
     {
         throw new NotImplementedException();
     }
+
+    public void MoveTownToPosition(Town town, Point position)
+    {
+        throw new NotImplementedException();
+    }
 }

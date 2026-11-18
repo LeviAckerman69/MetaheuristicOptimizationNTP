@@ -17,5 +17,7 @@ public interface IViewModel
 
     public void RemoveTownAtPosition(Point position);
 
+    public void MoveTownToPosition(Town town, Point position);
+
     public void CreatePopulation();
 }

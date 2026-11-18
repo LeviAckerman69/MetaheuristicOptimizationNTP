@@ -23,6 +23,11 @@
 
     <DockPanel>
         <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Towns">
+                <MenuItem Header="_Manage towns..." Command="{Binding OpenTownManagementCommand}" />
+                <Separator />
+                <MenuItem Header="_Clear towns..." Command="{Binding ClearTownsCommand}" />
+            </MenuItem>
             <MenuItem Header="_User">
                 <MenuItem
                     Header="_Register..."
