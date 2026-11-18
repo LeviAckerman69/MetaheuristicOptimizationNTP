@@ -10,6 +10,7 @@ public partial class MainViewModel
     [NotifyPropertyChangedFor(nameof(FormatCurrentUser))]
     [NotifyPropertyChangedFor(nameof(LoginText))]
     [NotifyCanExecuteChangedFor(nameof(OpenMyAccountCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveExperimentRunCommand))]
     [ObservableProperty]
     public partial User? CurrentUser { get; set; }
 

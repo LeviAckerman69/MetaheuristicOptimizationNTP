@@ -20,6 +20,7 @@ public partial class MainViewModel
     [NotifyCanExecuteChangedFor(nameof(OpenConfigurationDialogCommand))]
     [NotifyCanExecuteChangedFor(nameof(OpenTownManagementCommand))]
     [NotifyCanExecuteChangedFor(nameof(ClearTownsCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveExperimentRunCommand))]
     public partial bool IsEvolving { get; private set; }
 
     public string EvolveText => IsEvolving ? "Stop" : "Evolve";
@@ -56,6 +57,9 @@ public partial class MainViewModel
 
         Population.Populate(Towns, PopulationSize);
         SelectedSolution = Population.Solutions.FirstOrDefault();
+        _experimentStartedAt = DateTime.Now;
+        _initialBestDistance = SelectedSolution?.Fitness ?? 0;
+        SaveExperimentRunCommand.NotifyCanExecuteChanged();
     }
 
 

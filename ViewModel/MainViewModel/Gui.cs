@@ -94,6 +94,8 @@ public partial class MainViewModel
     {
         SelectedSolution = null;
         Population.Solutions.Clear();
+        _experimentStartedAt = null;
+        SaveExperimentRunCommand.NotifyCanExecuteChanged();
     }
 
 

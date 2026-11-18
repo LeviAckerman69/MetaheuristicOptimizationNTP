@@ -37,6 +37,9 @@
                     Header="{Binding LoginText}"
                     Command="{Binding LoginCommand}" />
             </MenuItem>
+            <MenuItem Header="_Runs">
+                <MenuItem Header="_Save current run..." Command="{Binding SaveExperimentRunCommand}" />
+            </MenuItem>
         </Menu>
 
         <StatusBar

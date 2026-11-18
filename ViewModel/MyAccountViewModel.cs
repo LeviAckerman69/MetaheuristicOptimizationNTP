@@ -66,7 +66,7 @@ public partial class MyAccountViewModel : DialogBaseViewModel
     [RelayCommand]
     public void DeleteAccount()
     {
-        var result = MessageBox.Show("Permanently delete your account? You will be logged out.",
+        var result = MessageBox.Show("Permanently delete your account and all your saved experiment runs? You will be logged out.",
             "Delete account", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
         if (result != MessageBoxResult.Yes)
         {
