@@ -21,6 +21,16 @@ public class EvolutionStep
     public string MutationPermutation { get; set; } = string.Empty;
     public double MutationFitness { get; set; }
 
+    // Route distance is minimized, so a positive gain means a shorter child route.
+    [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+    public double GainA => ParentAFitness - MutationFitness;
+
+    [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+    public double GainB => ParentBFitness - MutationFitness;
+
+    [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+    public double GainOverBetterParent => Math.Min(GainA, GainB);
+
     public double BestFitnessBefore { get; set; }
     public double BestFitnessAfter { get; set; }
     public bool OffspringSurvived { get; set; }

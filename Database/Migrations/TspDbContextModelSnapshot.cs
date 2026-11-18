@@ -108,6 +108,9 @@ namespace MetaheuristicOptimizationNTP.Database.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<byte[]>("RoutePreview")
+                        .HasColumnType("BLOB");
+
                     b.Property<DateTime>("StartedAt")
                         .HasColumnType("TEXT");
 

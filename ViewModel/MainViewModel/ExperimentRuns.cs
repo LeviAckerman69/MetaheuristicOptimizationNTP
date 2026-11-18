@@ -4,6 +4,8 @@ using MetaheuristicOptimizationNTP.View;
 using Microsoft.EntityFrameworkCore;
 using System.Windows;
 using System.Text.Json;
+using MetaheuristicOptimizationNTP.Database;
+using MetaheuristicOptimizationNTP.Helper;
 
 namespace MetaheuristicOptimizationNTP.ViewModel;
 
@@ -12,6 +14,22 @@ public partial class MainViewModel
     private DateTime? _experimentStartedAt;
     private double _initialBestDistance;
     private readonly List<EvolutionStep> _evolutionSteps = [];
+
+    private bool CanOpenRunHistory => CurrentUser is not null;
+
+    [RelayCommand(CanExecute = nameof(CanOpenRunHistory))]
+    public void OpenRunHistory()
+    {
+        if (CurrentUser is null)
+        {
+            return;
+        }
+
+        using var dbContext = new TspDbContext();
+        var viewModel = new RunHistoryViewModel(dbContext, CurrentUser.Id);
+        var dialog = new RunHistoryView(viewModel) { Owner = Application.Current.MainWindow };
+        dialog.ShowDialog();
+    }
 
     private bool CanSaveExperimentRun => CurrentUser is not null && !IsEvolving &&
         _experimentStartedAt.HasValue && Population.Count > 0 && Towns.Count >= 3;
@@ -24,7 +42,8 @@ public partial class MainViewModel
             return;
         }
 
-        var finalBestDistance = Population.Solutions.Min(solution => solution.Fitness);
+        var bestSolution = Population.Solutions.MinBy(solution => solution.Fitness)!;
+        var finalBestDistance = bestSolution.Fitness;
         if (!double.IsFinite(_initialBestDistance) || !double.IsFinite(finalBestDistance))
         {
             MessageBox.Show("The run has an invalid distance and cannot be saved.", "Cannot save run");
@@ -46,6 +65,7 @@ public partial class MainViewModel
             InitialBestDistance = _initialBestDistance,
             FinalBestDistance = finalBestDistance,
             Notes = viewModel.Notes,
+            RoutePreview = RoutePreviewHelper.CreatePng(Towns, bestSolution),
             TownSnapshot = JsonSerializer.Serialize(Towns.Select((town, index) => new
             {
                 Index = index, town.Id, town.Name, town.X, town.Y

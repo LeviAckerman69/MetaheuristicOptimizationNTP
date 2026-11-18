@@ -1,0 +1,123 @@
+<Window x:Class="MetaheuristicOptimizationNTP.View.RunHistoryView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="My run history" Width="1120" Height="780" MinWidth="850" MinHeight="620"
+        WindowStartupLocation="CenterOwner">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1.5*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <WrapPanel>
+            <StackPanel Margin="0,0,10,8">
+                <TextBlock Text="Name contains" />
+                <TextBox Width="170" Text="{Binding NameFilter, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+            <StackPanel Margin="0,0,10,8">
+                <TextBlock Text="From" />
+                <DatePicker Width="130" SelectedDate="{Binding FromDate}" />
+            </StackPanel>
+            <StackPanel Margin="0,0,10,8">
+                <TextBlock Text="Through" />
+                <DatePicker Width="130" SelectedDate="{Binding ToDate}" />
+            </StackPanel>
+            <StackPanel Margin="0,0,10,8">
+                <TextBlock Text="Maximum final distance" />
+                <TextBox Width="140" Text="{Binding MaxDistanceText, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+            <StackPanel Margin="0,0,10,8">
+                <TextBlock Text="Sort by" />
+                <ComboBox Width="150" ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SelectedSort}" />
+            </StackPanel>
+            <Button Content="Apply / Refresh" Command="{Binding RefreshCommand}" Padding="8,4" Margin="0,12,8,8" />
+            <Button Content="Clear filters" Command="{Binding ClearFiltersCommand}" Padding="8,4" Margin="0,12,0,8" />
+        </WrapPanel>
+        <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="Firebrick" TextWrapping="Wrap" Margin="0,0,0,8" />
+        <DataGrid Grid.Row="2" ItemsSource="{Binding Runs}" SelectedItem="{Binding SelectedRun}"
+                  AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                  CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" MinWidth="160" />
+                <DataGridTextColumn Header="Owner" Binding="{Binding User.Name}" Width="120" />
+                <DataGridTextColumn Header="Started" Binding="{Binding StartedAt, StringFormat={}{0:g}}" Width="160" />
+                <DataGridTextColumn Header="Initial distance" Binding="{Binding InitialBestDistance, StringFormat={}{0:F4}}" Width="130" />
+                <DataGridTextColumn Header="Final distance" Binding="{Binding FinalBestDistance, StringFormat={}{0:F4}}" Width="130" />
+                <DataGridTextColumn Header="Improvement (%)" Binding="{Binding ImprovementPercentage, StringFormat={}{0:F2}, TargetNullValue=N/A}" Width="140" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBlock Grid.Row="3" Text="Improvement = (initial − final) / initial × 100. N/A when the initial distance is zero."
+                   TextWrapping="Wrap" Margin="0,6,0,10" />
+        <TabControl Grid.Row="4">
+            <TabItem Header="Route preview">
+                <DockPanel Margin="8">
+                    <TextBlock DockPanel.Dock="Top" Text="{Binding PreviewMessage}" Margin="0,0,0,8" />
+                    <Border Background="White" BorderBrush="LightGray" BorderThickness="1">
+                        <Image Source="{Binding RoutePreview}" Stretch="Uniform" />
+                    </Border>
+                </DockPanel>
+            </TabItem>
+            <TabItem Header="Run details">
+                <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" /><RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" /><RowDefinition Height="*" /><RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Label Content="Name:" />
+                    <TextBox Grid.Row="1" Text="{Binding EditedName, UpdateSourceTrigger=PropertyChanged}" />
+                    <Label Grid.Row="2" Content="Notes:" />
+                    <TextBox Grid.Row="3" Text="{Binding EditedNotes, UpdateSourceTrigger=PropertyChanged}"
+                             AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
+                    <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,10,0,0">
+                        <Button Content="Save changes" Command="{Binding SaveChangesCommand}" Padding="10,6" />
+                        <Button Content="Delete run..." Command="{Binding DeleteRunCommand}" Padding="10,6" Margin="8,0,0,0" />
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Evolution steps">
+                <DockPanel Margin="8">
+                    <TextBlock DockPanel.Dock="Top" Text="Select a step to see its permutations. Runs saved before logging was added have no recorded steps."
+                               TextWrapping="Wrap" Margin="0,0,0,8" />
+                    <DataGrid ItemsSource="{Binding Steps}" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                              CanUserAddRows="False" CanUserDeleteRows="False" RowDetailsVisibilityMode="VisibleWhenSelected">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Step" Binding="{Binding StepNumber}" Width="55" />
+                            <DataGridTextColumn Header="Crossover" Binding="{Binding CrossoverAlgorithm}" Width="180" />
+                            <DataGridTextColumn Header="Mutation" Binding="{Binding MutationAlgorithm}" Width="155" />
+                            <DataGridTextColumn Header="Parent A fitness" Binding="{Binding ParentAFitness, StringFormat={}{0:F4}}" Width="125" />
+                            <DataGridTextColumn Header="Parent B fitness" Binding="{Binding ParentBFitness, StringFormat={}{0:F4}}" Width="125" />
+                            <DataGridTextColumn Header="Crossover fitness" Binding="{Binding CrossoverFitness, StringFormat={}{0:F4}}" Width="130" />
+                            <DataGridTextColumn Header="Mutation fitness" Binding="{Binding MutationFitness, StringFormat={}{0:F4}}" Width="130" />
+                            <DataGridTextColumn Header="Best before" Binding="{Binding BestFitnessBefore, StringFormat={}{0:F4}}" Width="110" />
+                            <DataGridTextColumn Header="Best after" Binding="{Binding BestFitnessAfter, StringFormat={}{0:F4}}" Width="110" />
+                            <DataGridCheckBoxColumn Header="Survived" Binding="{Binding OffspringSurvived}" Width="80" />
+                        </DataGrid.Columns>
+                        <DataGrid.RowDetailsTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="10">
+                                    <TextBlock Text="{Binding ParentAId, StringFormat=Parent A ID: {0}}" />
+                                    <TextBlock Text="{Binding ParentAPermutation, StringFormat=Parent A permutation: {0}}" />
+                                    <TextBlock Text="{Binding ParentBId, StringFormat=Parent B ID: {0}}" />
+                                    <TextBlock Text="{Binding ParentBPermutation, StringFormat=Parent B permutation: {0}}" />
+                                    <TextBlock Text="{Binding CrossoverPermutation, StringFormat=Crossover result: {0}}" />
+                                    <TextBlock Text="{Binding MutationPermutation, StringFormat=Mutation result: {0}}" />
+                                    <TextBlock Text="Final child gains (after mutation; positive means a shorter route):" Margin="0,8,0,0" />
+                                    <TextBlock Text="{Binding GainA, StringFormat='Gain over parent A: {0:+0.0000;-0.0000;0.0000}'}" />
+                                    <TextBlock Text="{Binding GainB, StringFormat='Gain over parent B: {0:+0.0000;-0.0000;0.0000}'}" />
+                                    <TextBlock Text="{Binding GainOverBetterParent, StringFormat='Gain over better parent: {0:+0.0000;-0.0000;0.0000}'}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGrid.RowDetailsTemplate>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+        </TabControl>
+        <DockPanel Grid.Row="5" Margin="0,10,0,0">
+            <TextBlock Text="{Binding Runs.Count, StringFormat=Matching runs: {0}}" VerticalAlignment="Center" />
+            <Button Content="Close" Command="{Binding CancelCommand}" HorizontalAlignment="Right" MinWidth="80" Padding="8,6" IsCancel="True" />
+        </DockPanel>
+    </Grid>
+</Window>

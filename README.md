@@ -47,4 +47,19 @@ they do not prove that an algorithm is inherently superior across different prob
 Previously saved runs have no step log or town snapshot; their history cannot be reconstructed.
 
 Deleting a run deletes its steps. Deleting an account also deletes its saved runs and their steps.
-Run-history viewing, editing and deletion will be added in the next step.
+Open **Runs → Run history…** while logged in to view your saved runs. Select a run to edit its name
+and notes, inspect its evolution steps, or delete it with confirmation. Recorded distances and steps
+remain unchanged when editing descriptions. Closing or selecting another run discards unsaved edits.
+
+History supports sorting by date, name and final distance in either direction. Filter by name,
+inclusive start/end dates and maximum final distance, then choose **Apply / Refresh**. **Clear filters**
+restores all your runs. Improvement (%) is calculated as `(initial - final) / initial * 100`, or N/A
+when the initial distance is zero; it is not stored as a separate editable database value.
+
+The **Owner** column looks up the username from `Users` through the run's `UserId` relationship.
+Refreshing history after a username change displays the updated name.
+
+New saves include a PNG of the run's best route in the `ExperimentRuns.RoutePreview` BLOB column.
+Select a run in history and open **Route preview** to view the image read from the database.
+The saved preview includes town labels and stays unchanged when the live problem is edited.
+Older runs without an image show a "No route preview was saved" message.
