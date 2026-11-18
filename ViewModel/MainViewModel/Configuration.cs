@@ -8,9 +8,14 @@ public partial class MainViewModel
 {
     public ConfigurationDialogViewModel ConfigurationDialogViewModel { get; } = new();
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanEditProblem))]
     public void OpenConfigurationDialog()
     {
+        if (IsEvolving)
+        {
+            return;
+        }
+
         var configurationDialogViewModelCopy = new ConfigurationDialogViewModel();
         configurationDialogViewModelCopy.Fill(ConfigurationDialogViewModel);
 

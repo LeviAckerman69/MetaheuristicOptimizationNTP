@@ -4,7 +4,7 @@ namespace MetaheuristicOptimizationNTP.Structures;
 
 public partial class Solution
 {
-    private static int SolutionCounter;
+    private static int SolutionCounter { get; set; }
 
     public string SolutionDescription => $"Solution {Id}: Fitness = {Fitness:F7}";
 

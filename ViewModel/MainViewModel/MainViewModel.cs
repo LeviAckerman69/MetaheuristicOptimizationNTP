@@ -14,7 +14,7 @@ public partial class MainViewModel : ObservableValidator, IViewModel
 
     public MainViewModel()
     {
-        DbContext.Database.EnsureDeleted();
+        // DbContext.Database.EnsureDeleted();
         DbContext.Database.EnsureCreated();
 
         var towns = DbContext.Towns;
