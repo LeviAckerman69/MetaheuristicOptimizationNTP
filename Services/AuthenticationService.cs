@@ -1,5 +1,6 @@
 ﻿using MetaheuristicOptimizationNTP.Database;
 using MetaheuristicOptimizationNTP.Structures;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -52,6 +53,50 @@ namespace MetaheuristicOptimizationNTP.Services
             }
 
             return null;
+        }
+
+        public static bool UpdateAccount(User user, string username, string newPassword)
+        {
+            username = username.Trim().ToLowerInvariant();
+            if (DbContext.Users.Any(other => other.Id != user.Id && other.Name == username))
+            {
+                return false;
+            }
+
+            var oldName = user.Name;
+            var oldHash = user.PasswordHash;
+            user.Name = username;
+            if (!string.IsNullOrEmpty(newPassword))
+            {
+                user.PasswordHash = HashPassword(newPassword, SaltUser(user.Id), GeneratedPepper());
+            }
+
+            try
+            {
+                DbContext.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                user.Name = oldName;
+                user.PasswordHash = oldHash;
+                throw;
+            }
+
+            return true;
+        }
+
+        public static void DeleteAccount(User user)
+        {
+            DbContext.Users.Remove(user);
+            try
+            {
+                DbContext.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                DbContext.Entry(user).State = EntityState.Unchanged;
+                throw;
+            }
         }
 
         public static bool Register(string username, string password)

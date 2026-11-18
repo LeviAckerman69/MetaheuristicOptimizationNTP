@@ -29,6 +29,7 @@
                 <MenuItem Header="_Clear towns..." Command="{Binding ClearTownsCommand}" />
             </MenuItem>
             <MenuItem Header="_User">
+                <MenuItem Header="_My account..." Command="{Binding OpenMyAccountCommand}" />
                 <MenuItem
                     Header="_Register..."
                     Command="{Binding RegisterCommand}" />
