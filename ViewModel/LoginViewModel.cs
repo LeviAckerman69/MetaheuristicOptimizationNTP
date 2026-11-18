@@ -9,10 +9,11 @@ namespace MetaheuristicOptimizationNTP.ViewModel
     public partial class LoginViewModel : DialogBaseViewModel
     {
         [ObservableProperty]
-        public string Username { get; set; } = string.Empty;
+        public partial string Username { get; set; } = string.Empty;
         [ObservableProperty]
-        public string Password { get; set; } = string.Empty;
-        public User SelectedUser { get; private set; }
+        public partial string Password { get; set; } = string.Empty;
+
+        public User SelectedUser { get; private set; } = null!;
 
         [RelayCommand]
         public void Login()

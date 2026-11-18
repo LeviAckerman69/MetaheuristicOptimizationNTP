@@ -5,9 +5,9 @@ namespace MetaheuristicOptimizationNTP.Structures;
 
 public class Population : ObservableObject
 {
-    public ObservableCollection<Solution> Solutions { get; set; } = new();
+    public ObservableCollection<Solution> Solutions { get; set; } = [];
 
-    private ObservableCollection<Town> TownsList { get; set; }
+    private ObservableCollection<Town> TownsList { get; set; } = [];
 
     public int Count => Solutions.Count;
 

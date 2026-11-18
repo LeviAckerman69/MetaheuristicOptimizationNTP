@@ -9,12 +9,12 @@ public partial class Solution
         var count = permutationA.Count;
 
         var permutationCrossover = Enumerable.Repeat(-1, count).ToList();
-        var startPosition = Random.Next(count);
-        var endPosition = Random.Next(count);
+        var startPosition = Random.Shared.Next(count);
+        var endPosition = Random.Shared.Next(count);
 
         while (startPosition == endPosition)
         {
-            endPosition = Random.Next(count);
+            endPosition = Random.Shared.Next(count);
         }
 
         var stepCount = (endPosition - startPosition + count) % count;
@@ -74,6 +74,46 @@ public partial class Solution
             if (permutationCrossover[i] == -1)
             {
                 permutationCrossover[i] = permutationB[i];
+            }
+        }
+
+        return new Solution(permutationCrossover);
+    }
+
+    public Solution OrderCrossover(Solution other)
+    {
+        var permutationA = PermutationView.ToList();
+        var permutationB = other.PermutationView.ToList();
+        var count = permutationA.Count;
+        var permutationCrossover = Enumerable.Repeat(-1, count).ToList();
+        var startPosition = Random.Shared.Next(count);
+        var endPosition = Random.Shared.Next(count);
+
+        while (startPosition == endPosition)
+        {
+            endPosition = Random.Shared.Next(count);
+        }
+
+        var stepCount = (endPosition - startPosition + count) % count;
+
+        for (var step = 0; step < stepCount; step++)
+        {
+            var currentStep = (startPosition + step) % count;
+            permutationCrossover[currentStep] = permutationA[currentStep];
+        }
+
+        var currentIndexB = 0;
+        for (var i = 0; i < count; i++)
+        {
+            if (permutationCrossover[i] == -1)
+            {
+                while (permutationCrossover.Contains(permutationB[currentIndexB]))
+                {
+                    currentIndexB++;
+                }
+
+                permutationCrossover[i] = permutationB[currentIndexB];
+                currentIndexB++;
             }
         }
 

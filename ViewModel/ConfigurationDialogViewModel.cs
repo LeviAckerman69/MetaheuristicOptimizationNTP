@@ -5,8 +5,8 @@ namespace MetaheuristicOptimizationNTP.ViewModel;
 
 public class ConfigurationDialogViewModel : DialogBaseViewModel
 {
-    public ObservableCollection<AlgorithmOption<MutationOperation>> MutationOptions { get; } = new();
-    public ObservableCollection<AlgorithmOption<CrossoverOperation>> CrossoverOptions { get; } = new();
+    public ObservableCollection<AlgorithmOption<MutationOperation>> MutationOptions { get; } = [];
+    public ObservableCollection<AlgorithmOption<CrossoverOperation>> CrossoverOptions { get; } = [];
 
 
 
@@ -48,10 +48,13 @@ public class ConfigurationDialogViewModel : DialogBaseViewModel
     {
         MutationOptions.Add(
             new AlgorithmOption<MutationOperation>("Swap Mutation", solution => solution.SwapMutation()));
+
         MutationOptions.Add(new AlgorithmOption<MutationOperation>("Inversion Mutation",
             solution => solution.InversionMutation()));
+
         MutationOptions.Add(new AlgorithmOption<MutationOperation>("Scramble Mutation",
             solution => solution.ScrambleMutation()));
+
         MutationOptions.Add(
             new AlgorithmOption<MutationOperation>("Insert Mutation", solution => solution.InsertMutation()));
     }
@@ -61,9 +64,14 @@ public class ConfigurationDialogViewModel : DialogBaseViewModel
         CrossoverOptions.Add(new AlgorithmOption<CrossoverOperation>(
             "Partially Mapped Crossover",
             (solution1, solution2) => solution1.PartiallyMatchedCrossover(solution2)));
+
         CrossoverOptions.Add(new AlgorithmOption<CrossoverOperation>(
             "Cycle Crossover",
             (solution1, solution2) => solution1.CycleCrossover(solution2)));
+
+        CrossoverOptions.Add(new AlgorithmOption<CrossoverOperation>(
+            "Order Crossover",
+            (solution1, solution2) => solution1.OrderCrossover(solution2)));
     }
 
     public MutationOperation PickRandomMutationOperation()

@@ -6,13 +6,11 @@ public partial class Solution
 {
     private static int SolutionCounter;
 
-    private static readonly Random Random = new();
-
     public string SolutionDescription => $"Solution {Id}: Fitness = {Fitness:F7}";
 
     public int Id { get; }
 
-    private List<int> Permutation { get; }
+    private List<int> Permutation { get; } = [];
 
     public IReadOnlyList<int> PermutationView => Permutation.AsReadOnly();
 

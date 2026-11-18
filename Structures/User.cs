@@ -8,10 +8,10 @@ namespace MetaheuristicOptimizationNTP.Structures
         public Guid Id { get; set; }
 
         [MinLength(5), MaxLength(60)]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [StringLength(64, MinimumLength = 64)]
-        public string PasswordHash { get; set; }
+        public string PasswordHash { get; set; } = string.Empty;
 
 
     }

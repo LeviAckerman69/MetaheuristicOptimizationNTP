@@ -8,11 +8,11 @@ namespace MetaheuristicOptimizationNTP.ViewModel
     public partial class RegisterViewModel : DialogBaseViewModel
     {
         [ObservableProperty]
-        public string Username { get; set; } = string.Empty;
+        public partial string Username { get; set; } = string.Empty;
         [ObservableProperty]
-        public string Password { get; set; } = string.Empty;
+        public partial string Password { get; set; } = string.Empty;
         [ObservableProperty]
-        public string RepeatPassword { get; set; } = string.Empty;
+        public partial string RepeatPassword { get; set; } = string.Empty;
 
         [RelayCommand]
         public void Register()

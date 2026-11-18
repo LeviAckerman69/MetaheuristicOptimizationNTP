@@ -13,12 +13,12 @@ public partial class Solution
 
         var mutatedSolution = new Solution(Permutation);
 
-        var i = Random.Next(townCount);
-        var j = Random.Next(townCount);
+        var i = Random.Shared.Next(townCount);
+        var j = Random.Shared.Next(townCount);
 
         while (i == j)
         {
-            j = Random.Next(townCount);
+            j = Random.Shared.Next(townCount);
         }
 
         mutatedSolution.Permutation[i] = Permutation[j];
@@ -43,12 +43,12 @@ public partial class Solution
 
         var mutatedSolution = new Solution(Permutation);
 
-        var currentPosition = Random.Next(townCount);
-        var newPosition = Random.Next(townCount);
+        var currentPosition = Random.Shared.Next(townCount);
+        var newPosition = Random.Shared.Next(townCount);
 
         while (newPosition == currentPosition)
         {
-            newPosition = Random.Next(townCount);
+            newPosition = Random.Shared.Next(townCount);
         }
 
         mutatedSolution.Permutation.RemoveAt(currentPosition);
@@ -81,7 +81,7 @@ public partial class Solution
             mutationLength = 3;
         }
 
-        var i = Random.Next(townCount);
+        var i = Random.Shared.Next(townCount);
 
 
         for (var j = 0; j < mutationLength; j++)
@@ -115,7 +115,7 @@ public partial class Solution
             mutationLength = 3;
         }
 
-        var i = Random.Next(townCount);
+        var i = Random.Shared.Next(townCount);
 
         var segment = new List<int>();
 
