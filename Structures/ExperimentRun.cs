@@ -16,4 +16,6 @@ public class ExperimentRun
     public double InitialBestDistance { get; set; }
     public double FinalBestDistance { get; set; }
     public string Notes { get; set; } = string.Empty;
+    public string TownSnapshot { get; set; } = string.Empty;
+    public List<EvolutionStep> Steps { get; set; } = [];
 }

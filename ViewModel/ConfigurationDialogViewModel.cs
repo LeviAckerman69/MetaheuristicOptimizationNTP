@@ -10,7 +10,7 @@ public class ConfigurationDialogViewModel : DialogBaseViewModel
 
 
 
-    private IEnumerable<MutationOperation> SelectedMutations
+    private IEnumerable<AlgorithmOption<MutationOperation>> SelectedMutations
     {
         get
         {
@@ -18,13 +18,13 @@ public class ConfigurationDialogViewModel : DialogBaseViewModel
             {
                 if (algorithmOption.IsSelected)
                 {
-                    yield return algorithmOption.Operation;
+                    yield return algorithmOption;
                 }
             }
         }
     }
 
-    private IEnumerable<CrossoverOperation> SelectedCrossovers
+    private IEnumerable<AlgorithmOption<CrossoverOperation>> SelectedCrossovers
     {
         get
         {
@@ -32,7 +32,7 @@ public class ConfigurationDialogViewModel : DialogBaseViewModel
             {
                 if (algorithmOption.IsSelected)
                 {
-                    yield return algorithmOption.Operation;
+                    yield return algorithmOption;
                 }
             }
         }
@@ -74,7 +74,7 @@ public class ConfigurationDialogViewModel : DialogBaseViewModel
             (solution1, solution2) => solution1.OrderCrossover(solution2)));
     }
 
-    public MutationOperation PickRandomMutationOperation()
+    public AlgorithmOption<MutationOperation> PickRandomMutationOption()
     {
         var selected = SelectedMutations.ToArray();
 
@@ -83,7 +83,7 @@ public class ConfigurationDialogViewModel : DialogBaseViewModel
         return randomMutation;
     }
 
-    public CrossoverOperation PickRandomCrossoverOperation()
+    public AlgorithmOption<CrossoverOperation> PickRandomCrossoverOption()
     {
         var selected = SelectedCrossovers.ToArray();
         var randomCrossover = selected[Random.Shared.Next(selected.Length)];

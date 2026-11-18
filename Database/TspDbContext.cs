@@ -11,6 +11,7 @@ namespace MetaheuristicOptimizationNTP.Database
 
         public DbSet<User> Users => Set<User>();
         public DbSet<ExperimentRun> ExperimentRuns => Set<ExperimentRun>();
+        public DbSet<EvolutionStep> EvolutionSteps => Set<EvolutionStep>();
 
         public void InitializeDatabase()
         {

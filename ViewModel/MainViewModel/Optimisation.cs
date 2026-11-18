@@ -59,6 +59,7 @@ public partial class MainViewModel
         SelectedSolution = Population.Solutions.FirstOrDefault();
         _experimentStartedAt = DateTime.Now;
         _initialBestDistance = SelectedSolution?.Fitness ?? 0;
+        _evolutionSteps.Clear();
         SaveExperimentRunCommand.NotifyCanExecuteChanged();
     }
 
@@ -179,14 +180,16 @@ public partial class MainViewModel
 
     private void EvolveOneStep()
     {
+        var bestFitnessBefore = Population.Solutions[0].Fitness;
         var parentA = ParentSelectionHelper.TournamentSelection(Population, Math.Min(5, Population.Count));
         var parentB = ParentSelectionHelper.TournamentSelection(Population, Math.Min(5, Population.Count - 1), parentA);
 
-        var crossoverOperation = ConfigurationDialogViewModel.PickRandomCrossoverOperation();
-        var child = crossoverOperation(parentA, parentB);
+        var crossover = ConfigurationDialogViewModel.PickRandomCrossoverOption();
+        var child = crossover.Operation(parentA, parentB);
+        child.Evaluate(Towns);
 
-        var mutationOperation = ConfigurationDialogViewModel.PickRandomMutationOperation();
-        var mutatedChild = mutationOperation(child);
+        var mutation = ConfigurationDialogViewModel.PickRandomMutationOption();
+        var mutatedChild = mutation.Operation(child);
 
         mutatedChild.Evaluate(Towns);
 
@@ -194,6 +197,26 @@ public partial class MainViewModel
         Population.Solutions.Insert(solutionIndex, mutatedChild);
 
         Population.Solutions.RemoveAt(Population.Solutions.Count - 1);
+
+        _evolutionSteps.Add(new EvolutionStep
+        {
+            StepNumber = _evolutionSteps.Count + 1,
+            ParentAId = parentA.Id,
+            ParentAPermutation = string.Join(",", parentA.PermutationView),
+            ParentAFitness = parentA.Fitness,
+            ParentBId = parentB.Id,
+            ParentBPermutation = string.Join(",", parentB.PermutationView),
+            ParentBFitness = parentB.Fitness,
+            CrossoverAlgorithm = crossover.Name,
+            CrossoverPermutation = string.Join(",", child.PermutationView),
+            CrossoverFitness = child.Fitness,
+            MutationAlgorithm = mutation.Name,
+            MutationPermutation = string.Join(",", mutatedChild.PermutationView),
+            MutationFitness = mutatedChild.Fitness,
+            BestFitnessBefore = bestFitnessBefore,
+            BestFitnessAfter = Population.Solutions[0].Fitness,
+            OffspringSurvived = Population.Solutions.Contains(mutatedChild)
+        });
     }
 
 }

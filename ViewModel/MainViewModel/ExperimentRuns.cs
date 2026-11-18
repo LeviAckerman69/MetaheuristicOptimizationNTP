@@ -3,6 +3,7 @@ using MetaheuristicOptimizationNTP.Structures;
 using MetaheuristicOptimizationNTP.View;
 using Microsoft.EntityFrameworkCore;
 using System.Windows;
+using System.Text.Json;
 
 namespace MetaheuristicOptimizationNTP.ViewModel;
 
@@ -10,6 +11,7 @@ public partial class MainViewModel
 {
     private DateTime? _experimentStartedAt;
     private double _initialBestDistance;
+    private readonly List<EvolutionStep> _evolutionSteps = [];
 
     private bool CanSaveExperimentRun => CurrentUser is not null && !IsEvolving &&
         _experimentStartedAt.HasValue && Population.Count > 0 && Towns.Count >= 3;
@@ -43,7 +45,12 @@ public partial class MainViewModel
             StartedAt = _experimentStartedAt!.Value,
             InitialBestDistance = _initialBestDistance,
             FinalBestDistance = finalBestDistance,
-            Notes = viewModel.Notes
+            Notes = viewModel.Notes,
+            TownSnapshot = JsonSerializer.Serialize(Towns.Select((town, index) => new
+            {
+                Index = index, town.Id, town.Name, town.X, town.Y
+            })),
+            Steps = _evolutionSteps.Select(step => new EvolutionStep(step)).ToList()
         };
         DbContext.ExperimentRuns.Add(run);
         try
@@ -53,6 +60,10 @@ public partial class MainViewModel
         }
         catch (DbUpdateException)
         {
+            foreach (var step in run.Steps)
+            {
+                DbContext.Entry(step).State = EntityState.Detached;
+            }
             DbContext.Entry(run).State = EntityState.Detached;
             MessageBox.Show("The experiment run could not be saved. Please try again.", "Save failed",
                 MessageBoxButton.OK, MessageBoxImage.Error);

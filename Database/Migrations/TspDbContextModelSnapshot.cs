@@ -17,6 +17,76 @@ namespace MetaheuristicOptimizationNTP.Database.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.10");
 
+            modelBuilder.Entity("MetaheuristicOptimizationNTP.Structures.EvolutionStep", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("BestFitnessAfter")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("BestFitnessBefore")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("CrossoverAlgorithm")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("CrossoverFitness")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("CrossoverPermutation")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ExperimentRunId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MutationAlgorithm")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("MutationFitness")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("MutationPermutation")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("OffspringSurvived")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("ParentAFitness")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("ParentAId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ParentAPermutation")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("ParentBFitness")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("ParentBId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ParentBPermutation")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("StepNumber")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExperimentRunId");
+
+                    b.ToTable("EvolutionSteps");
+                });
+
             modelBuilder.Entity("MetaheuristicOptimizationNTP.Structures.ExperimentRun", b =>
                 {
                     b.Property<Guid>("Id")
@@ -39,6 +109,10 @@ namespace MetaheuristicOptimizationNTP.Database.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("StartedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TownSnapshot")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserId")
@@ -94,6 +168,17 @@ namespace MetaheuristicOptimizationNTP.Database.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("MetaheuristicOptimizationNTP.Structures.EvolutionStep", b =>
+                {
+                    b.HasOne("MetaheuristicOptimizationNTP.Structures.ExperimentRun", "ExperimentRun")
+                        .WithMany("Steps")
+                        .HasForeignKey("ExperimentRunId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ExperimentRun");
+                });
+
             modelBuilder.Entity("MetaheuristicOptimizationNTP.Structures.ExperimentRun", b =>
                 {
                     b.HasOne("MetaheuristicOptimizationNTP.Structures.User", "User")
@@ -103,6 +188,11 @@ namespace MetaheuristicOptimizationNTP.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MetaheuristicOptimizationNTP.Structures.ExperimentRun", b =>
+                {
+                    b.Navigation("Steps");
                 });
 #pragma warning restore 612, 618
         }
